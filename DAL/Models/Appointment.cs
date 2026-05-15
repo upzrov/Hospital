@@ -1,4 +1,4 @@
-﻿namespace Hospital.Models
+﻿namespace DAL.Models
 {
     public class Appointment
     {
