@@ -20,7 +20,7 @@ namespace PL.Controllers
 
             SetTokenCookie(result.Token!, result.Expiration!.Value);
 
-            return Ok();
+            return Ok(result.Patient);
         }
 
         [HttpPost("sign-in")]

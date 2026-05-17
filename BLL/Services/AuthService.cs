@@ -9,7 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BLL.Services
 {
-    public class AuthService(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration) : IAuthService
+    public class AuthService(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, 
+        IConfiguration configuration, IPatientService patientService) : IAuthService
     {
         public async Task<AuthResult> SignUpAsync(SignupDto model)
         {
@@ -35,12 +36,20 @@ namespace BLL.Services
                 return new AuthResult { IsSuccess = false, ErrorMessage = errors };
             }
 
+            var patient = await patientService.Create(new CreatePatientDto
+            {
+                FullName = model.FullName,
+                DateOfBirth = model.DateOfBirth,
+                PhoneNumber = model.PhoneNumber,
+                UserId = user.Id
+            });
+            
             if (await roleManager.RoleExistsAsync("Patient"))
             {
                 await userManager.AddToRoleAsync(user, "Patient");
             }
 
-            return await GenerateAuthResultAsync(user);
+            return await GenerateAuthResultAsync(user, patient);
         }
 
         public async Task<AuthResult> SignInAsync(SigninDto model)
@@ -60,7 +69,7 @@ namespace BLL.Services
             return await GenerateAuthResultAsync(user);
         }
 
-        private async Task<AuthResult> GenerateAuthResultAsync(User user)
+        private async Task<AuthResult> GenerateAuthResultAsync(User user, PatientDto? patient = null)
         {
             var userRoles = await userManager.GetRolesAsync(user);
 
@@ -84,7 +93,8 @@ namespace BLL.Services
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 Expiration = token.ValidTo,
                 Id = user.Id,
-                Roles = userRoles
+                Roles = userRoles,
+                Patient = patient
             };
         }
 
