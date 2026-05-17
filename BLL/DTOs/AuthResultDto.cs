@@ -8,5 +8,6 @@
         public DateTime? Expiration { get; set; }
         public string? Id { get; set; }
         public IList<string>? Roles { get; set; }
+        public PatientDto? Patient { get; set; }
     }
 }
