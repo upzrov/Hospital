@@ -1,4 +1,5 @@
 using System.Text;
+using BLL.Services;
 using DAL.Data;
 using DAL.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -43,6 +44,8 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
     };
 });
+
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
