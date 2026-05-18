@@ -13,9 +13,15 @@ namespace PL.Controllers
         [Authorize(Roles="Administrator")]
         public async Task<IActionResult> CreateDoctor([FromBody] CreateDoctorDto model)
         {
-            var doctor = await doctorService.Create(model);
+            var doctor = await doctorService.CreateAsync(model);
             
             return Ok(doctor);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllDoctors()
+        {
+            return Ok(await doctorService.GetAllAsync());
         }
     }
 }

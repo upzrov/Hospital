@@ -7,7 +7,7 @@ namespace BLL.Services;
 
 public class DoctorService(IRepository<Doctor> repository):IDoctorService
 {
-    public async Task<DoctorDto> Create(CreateDoctorDto dto)
+    public async Task<DoctorDto> CreateAsync(CreateDoctorDto dto)
     {
         var doctor = new Doctor
         {
@@ -27,5 +27,19 @@ public class DoctorService(IRepository<Doctor> repository):IDoctorService
             PhoneNumber = doctor.PhoneNumber,
             Specialty = doctor.Specialty
         };
+    }
+
+    public async Task<IEnumerable<DoctorDto>> GetAllAsync()
+    {
+        var doctors = await repository.GetAllAsync();
+        
+        return doctors.Select(d => new DoctorDto
+        {
+            DoctorId = d.DoctorId,
+            FullName = d.FullName,
+            Email = d.Email,
+            PhoneNumber = d.PhoneNumber,
+            Specialty = d.Specialty
+        });
     }
 }

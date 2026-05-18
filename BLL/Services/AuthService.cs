@@ -37,7 +37,7 @@ namespace BLL.Services
                 return new AuthResult { IsSuccess = false, ErrorMessage = errors };
             }
 
-            var patient = await patientService.Create(new CreatePatientDto
+            var patient = await patientService.CreateAsync(new CreatePatientDto
             {
                 FullName = model.FullName,
                 DateOfBirth = model.DateOfBirth,

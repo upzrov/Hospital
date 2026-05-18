@@ -7,7 +7,7 @@ namespace BLL.Services;
 
 public class PatientService(IRepository<Patient> repository): IPatientService
 {
-    public async Task<PatientDto> Create(CreatePatientDto dto) 
+    public async Task<PatientDto> CreateAsync(CreatePatientDto dto) 
     {
         var patient = new Patient
         {
