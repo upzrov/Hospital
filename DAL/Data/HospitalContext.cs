@@ -19,6 +19,10 @@ namespace DAL.Data
                 .HasOne(u => u.PatientProfile)
                 .WithOne(p => p.User)
                 .HasForeignKey<Patient>(p => p.UserId);
+
+            builder.Entity<Doctor>()
+                .Property(d => d.Specialty)
+                .HasConversion<string>();
         }
     }
 }

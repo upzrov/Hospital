@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using BLL.DTOs;
+using BLL.Interfaces;
 using DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -36,7 +37,7 @@ namespace BLL.Services
                 return new AuthResult { IsSuccess = false, ErrorMessage = errors };
             }
 
-            var patient = await patientService.Create(new CreatePatientDto
+            var patient = await patientService.CreateAsync(new CreatePatientDto
             {
                 FullName = model.FullName,
                 DateOfBirth = model.DateOfBirth,
