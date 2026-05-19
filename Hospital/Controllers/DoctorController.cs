@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace PL.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class DoctorController(IDoctorService doctorService) : ControllerBase
     {

@@ -11,7 +11,7 @@ namespace DAL.Data
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
 
-            string[] roleNames = { "Administrator", "Manager", "Patient" };
+            string[] roleNames = ["Administrator", "Manager", "Patient"];
 
             foreach (var roleName in roleNames)
             {
