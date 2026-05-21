@@ -17,5 +17,11 @@ namespace PL.Controllers
             
             return Ok(service);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllServices()
+        {
+            return Ok(await serviceService.GetAllServicesAsync());
+        }
     }
 }

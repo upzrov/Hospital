@@ -16,4 +16,11 @@ public class ServiceService(IRepository<Service> repository, IMapper mapper) : I
 
         return mapper.Map<ServiceDto>(service);
     }
+
+    public async Task<IEnumerable<ServiceDto>> GetAllServicesAsync()
+    {
+        var services = await repository.GetAllAsync();
+
+        return services.Select(s => mapper.Map<ServiceDto>(s));
+    }
 }
