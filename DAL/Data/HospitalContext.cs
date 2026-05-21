@@ -24,7 +24,7 @@ namespace DAL.Data
                 .Property(d => d.Specialty)
                 .HasConversion<string>();
             
-            builder.Entity<Doctor>()
+            builder.Entity<Service>()
                 .Property(d => d.Specialty)
                 .HasConversion<string>();
         }

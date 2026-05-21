@@ -13,9 +13,15 @@ namespace PL.Controllers
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> CreateService([FromBody] CreateServiceDto model)
         {
-            var service = await serviceService.CreateServiceAsync(model);
-            
-            return Ok(service);
+            try
+            {
+                var service = await serviceService.CreateServiceAsync(model);
+                return Ok(service);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]

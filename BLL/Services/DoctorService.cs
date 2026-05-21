@@ -11,6 +11,11 @@ public class DoctorService(IRepository<Doctor> doctorRepository, IRepository<Ser
 {
     public async Task<DoctorDto> CreateAsync(CreateDoctorDto dto)
     {
+        if (!Enum.IsDefined(dto.Specialty))
+        {
+            throw new ArgumentException("Invalid specialty");
+        }
+        
         var doctor = mapper.Map<Doctor>(dto);
 
         await doctorRepository.CreateAsync(doctor);

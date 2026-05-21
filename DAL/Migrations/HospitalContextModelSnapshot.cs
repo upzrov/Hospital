@@ -114,8 +114,9 @@ namespace DAL.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Specialty")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Specialty")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ServiceId");
 

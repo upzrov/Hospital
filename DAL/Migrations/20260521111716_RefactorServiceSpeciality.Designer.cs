@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(HospitalContext))]
-    [Migration("20260521110138_RefactorServiceSpeciality")]
+    [Migration("20260521111716_RefactorServiceSpeciality")]
     partial class RefactorServiceSpeciality
     {
         /// <inheritdoc />
@@ -117,8 +117,9 @@ namespace DAL.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Specialty")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Specialty")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ServiceId");
 

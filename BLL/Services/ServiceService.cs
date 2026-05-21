@@ -10,6 +10,11 @@ public class ServiceService(IRepository<Service> repository, IMapper mapper) : I
 {
     public async Task<ServiceDto> CreateServiceAsync(CreateServiceDto dto)
     {
+        if (!Enum.IsDefined(dto.Specialty))
+        {
+            throw new ArgumentException("Invalid specialty");
+        }
+        
         var service = mapper.Map<Service>(dto);
         
         await repository.CreateAsync(service);
