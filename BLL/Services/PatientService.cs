@@ -1,3 +1,4 @@
+using AutoMapper;
 using BLL.DTOs;
 using BLL.Interfaces;
 using DAL.Interfaces;
@@ -5,27 +6,14 @@ using DAL.Models;
 
 namespace BLL.Services;
 
-public class PatientService(IRepository<Patient> repository): IPatientService
+public class PatientService(IRepository<Patient> repository, IMapper mapper): IPatientService
 {
     public async Task<PatientDto> CreateAsync(CreatePatientDto dto) 
     {
-        var patient = new Patient
-        {
-            FullName = dto.FullName,
-            PhoneNumber = dto.PhoneNumber,
-            DateOfBirth = dto.DateOfBirth,
-            UserId = dto.UserId
-        };
+        var patient = mapper.Map<Patient>(dto);
         
         await repository.CreateAsync(patient);
 
-        return new PatientDto
-        {
-            PatientId = patient.PatientId,
-            FullName = patient.FullName,
-            PhoneNumber = patient.PhoneNumber,
-            DateOfBirth = patient.DateOfBirth,
-            UserId = patient.UserId
-        };
+        return mapper.Map<PatientDto>(patient);
     }
 }
