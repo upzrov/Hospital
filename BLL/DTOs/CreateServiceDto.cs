@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using DAL.Enums;
 
 namespace BLL.DTOs;
 
@@ -16,4 +17,6 @@ public class CreateServiceDto
     
     [Range(0, double.MaxValue, ErrorMessage = "Price must be a positive number")]
     public decimal Price { get; set; }
+    
+    public Specialty Specialty { get; set; }
 }

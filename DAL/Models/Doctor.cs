@@ -11,5 +11,6 @@ namespace DAL.Models
         public string? PhoneNumber { get; set; }
 
         public List<Appointment> Appointments { get; } = [];
+        public ICollection<Service> Services { get; set; } = [];
     }
 }

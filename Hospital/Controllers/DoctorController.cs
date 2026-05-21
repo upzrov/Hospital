@@ -23,5 +23,24 @@ namespace PL.Controllers
         {
             return Ok(await doctorService.GetAllAsync());
         }
+
+        [Authorize(Roles = "Administrator")]
+        [HttpPut("{doctorId}/services/{serviceId}")]
+        public async Task<IActionResult> AssignServiceToDoctor(int doctorId, int serviceId)
+        {
+            try
+            {
+                await doctorService.AssignServiceToDoctorAsync(doctorId, serviceId);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

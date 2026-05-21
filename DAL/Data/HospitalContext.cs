@@ -23,6 +23,10 @@ namespace DAL.Data
             builder.Entity<Doctor>()
                 .Property(d => d.Specialty)
                 .HasConversion<string>();
+            
+            builder.Entity<Doctor>()
+                .Property(d => d.Specialty)
+                .HasConversion<string>();
         }
     }
 }
