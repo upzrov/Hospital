@@ -1,5 +1,6 @@
 using System.Text;
 using BLL.Interfaces;
+using BLL.Mapping;
 using BLL.Services;
 using DAL.Data;
 using DAL.Interfaces;
@@ -60,6 +61,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+builder.Services.AddAutoMapper(cfg => { },typeof(PatientProfile).Assembly);
 
 var app = builder.Build();
 
