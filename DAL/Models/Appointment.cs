@@ -1,16 +1,20 @@
-﻿namespace DAL.Models
+namespace DAL.Models
 {
     public class Appointment
     {
         public int AppointmentId { get; set; }
-        public DateTime AppointmentDate { get; set; }
+        public DateTime StartAt { get; set; }
+        public DateTime EndAt { get; set; }
         public string? Status { get; set; }
 
         public int DoctorId { get; set; }
-        public required Doctor Doctor { get; set; }
+        public  Doctor Doctor { get; set; }
 
         public int PatientId { get; set; }
-        public required Patient Patient { get; set; }
+        public Patient Patient { get; set; }
+        
+        public int ServiceId { get; set; }
+        public Service Service { get; set; }
     }
 
 }

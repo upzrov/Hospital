@@ -31,5 +31,10 @@ public class Repository<T>(HospitalContext context) : IRepository<T> where T : c
     {
         context.Set<T>().Remove(entity);
         await context.SaveChangesAsync();
-    }   
+    }
+
+    public virtual IQueryable<T> Query()
+    {
+        return context.Set<T>().AsQueryable();
+    }
 }

@@ -17,6 +17,9 @@ public class CreateServiceDto
     
     [Range(0, double.MaxValue, ErrorMessage = "Price must be a positive number")]
     public decimal Price { get; set; }
+    [Range(0, int.MaxValue, ErrorMessage = "Duration must be a positive number")]
+
+    public int DurationMinutes { get; set; }
     
     public Specialty Specialty { get; set; }
 }

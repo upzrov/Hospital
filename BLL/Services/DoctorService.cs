@@ -3,6 +3,7 @@ using BLL.DTOs;
 using BLL.Interfaces;
 using DAL.Interfaces;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services;
 
@@ -32,7 +33,10 @@ public class DoctorService(IRepository<Doctor> doctorRepository, IRepository<Ser
 
     public async Task AssignServiceToDoctorAsync(int doctorId, int serviceId)
     {
-        var doctor = await doctorRepository.GetByIdAsync(doctorId);
+        var doctor = await doctorRepository.Query()
+            .Include(d => d.Services)
+            .FirstOrDefaultAsync(d => d.DoctorId == doctorId);
+        
         var service = await serviceRepository.GetByIdAsync(serviceId);
 
         ValidateAssignService(doctor, service);
