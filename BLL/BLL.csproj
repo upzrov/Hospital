@@ -15,9 +15,5 @@
   <ItemGroup>
     <ProjectReference Include="..\DAL\DAL.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DTOs\Appointment\" />
-  </ItemGroup>
 	
 </Project>
