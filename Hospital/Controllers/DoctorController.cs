@@ -48,5 +48,24 @@ namespace PL.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [Authorize(Roles = "Administrator")]
+        [HttpDelete("{doctorId}")]
+        public async Task<IActionResult> DeleteDoctor([FromRoute] int doctorId)
+        {
+            try
+            {
+                await doctorService.DeleteDoctorAsync(doctorId);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

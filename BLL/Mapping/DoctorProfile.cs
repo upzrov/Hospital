@@ -9,7 +9,7 @@ public class DoctorProfile : Profile
     public DoctorProfile()
     {
         CreateMap<CreateDoctorDto, Doctor>();
-        
+
         CreateMap<Doctor, DoctorDto>();
     }
 }

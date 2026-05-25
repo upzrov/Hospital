@@ -7,4 +7,5 @@ public interface IDoctorService
     Task<DoctorDto> CreateAsync(CreateDoctorDto dto);
     Task<IEnumerable<DoctorDto>> GetAllAsync();
     Task AssignServiceToDoctorAsync(int doctorId, int serviceId);
+    Task DeleteDoctorAsync(int doctorId);
 }
