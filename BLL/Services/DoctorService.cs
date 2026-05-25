@@ -26,7 +26,11 @@ public class DoctorService(IRepository<Doctor> doctorRepository, IRepository<Ser
 
     public async Task<IEnumerable<DoctorDto>> GetAllAsync()
     {
-        var doctors = await doctorRepository.GetAllAsync();
+        var doctors = await doctorRepository
+            .Query()
+            .Include(d => d.Services)
+            .Include(d => d.Appointments)
+            .ToListAsync();
         
         return doctors.Select(d => mapper.Map<DoctorDto>(d));
     }
@@ -43,6 +47,31 @@ public class DoctorService(IRepository<Doctor> doctorRepository, IRepository<Ser
         
         doctor!.Services.Add(service!);
         await doctorRepository.UpdateAsync(doctor);
+    }
+
+    public async Task DeleteDoctorAsync(int doctorId)
+    {
+        var doctor = await doctorRepository
+            .Query()
+            .Include(d => d.Appointments)
+            .FirstOrDefaultAsync(d => d.DoctorId == doctorId);
+        
+        ValidateDeleteDoctor(doctor);
+
+        await doctorRepository.DeleteAsync(doctor!);
+    }
+
+    private void ValidateDeleteDoctor(Doctor? doctor)
+    {
+        if (doctor == null)
+        {
+            throw new KeyNotFoundException("Doctor not found");
+        }
+
+        if (doctor.Appointments.Any(a => a.EndAt > DateTime.UtcNow))
+        {
+            throw new InvalidOperationException("Doctor has appointments");
+        }
     }
 
     private void ValidateAssignService(Doctor? doctor, Service? service)
@@ -62,7 +91,7 @@ public class DoctorService(IRepository<Doctor> doctorRepository, IRepository<Ser
             throw new InvalidOperationException("Doctor and service must have the same specialty");
         }
 
-        if (doctor.Services.Contains(service))
+        if (doctor.Services.Any(d => d.ServiceId == service.ServiceId))
         {
             throw new InvalidOperationException("Doctor already has this service");
         }

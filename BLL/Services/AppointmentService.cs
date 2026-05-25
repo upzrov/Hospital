@@ -22,7 +22,10 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
         
         var service = await serviceRepository.GetByIdAsync(dto.ServiceId);
         
-        var doctor = await doctorRepository.GetByIdAsync(dto.DoctorId);
+        var doctor = await doctorRepository
+            .Query()
+            .Include(d => d.Services)
+            .FirstOrDefaultAsync(d => d.DoctorId == dto.DoctorId);
         
         await ValidateAppointmentAsync(service, doctor, dto);
         
@@ -65,7 +68,7 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
                            && newStart < a.EndAt &&
                            newEnd > a.StartAt);
 
-        if (doctor.Services.All(s => s.ServiceId != service.ServiceId))
+        if (!doctor.Services.Any(d => d.ServiceId == service.ServiceId))
         {
             throw new InvalidOperationException("Doctor does not have this service");
         }
