@@ -48,7 +48,9 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
     {
         var appointments = await appointmentRepository.GetAllAsync();
         
-        return appointments.Select(a => mapper.Map<AppointmentDto>(a));
+        return appointments
+            .OrderByDescending(a => a.StartAt)
+            .Select(a => mapper.Map<AppointmentDto>(a));
     }
 
     public async Task DeleteAppointmentAsync(int appointmentId)
@@ -77,6 +79,7 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
         var appointments = await appointmentRepository
             .Query()
             .Where(a => a.PatientId == patient.PatientId)
+            .OrderByDescending(a => a.StartAt)
             .ToListAsync();
         
         return appointments.Select(a => mapper.Map<AppointmentDto>(a));   
