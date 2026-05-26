@@ -36,5 +36,20 @@ namespace PL.Controllers
         {
             return Ok(await appointmentService.GetAllAppointmentsAsync());
         }
+
+        [HttpDelete("{appointmentId}")]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> DeleteAppointment([FromRoute] int appointmentId)
+        {
+            try
+            {
+                await appointmentService.DeleteAppointmentAsync(appointmentId);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }

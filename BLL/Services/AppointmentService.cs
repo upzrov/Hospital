@@ -50,6 +50,18 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
         return appointments.Select(a => mapper.Map<AppointmentDto>(a));
     }
 
+    public async Task DeleteAppointmentAsync(int appointmentId)
+    {
+        var appointment = await appointmentRepository.GetByIdAsync(appointmentId);
+
+        if (appointment == null)
+        {
+            throw new KeyNotFoundException("Appointment not found");
+        }
+
+        await appointmentRepository.DeleteAsync(appointment);
+    }
+
     private async Task ValidateAppointmentAsync(Service? service, Doctor? doctor, CreateAppointmentDto dto)
     {
         if (service == null)
