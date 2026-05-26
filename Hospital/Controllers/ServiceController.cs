@@ -29,5 +29,24 @@ namespace PL.Controllers
         {
             return Ok(await serviceService.GetAllServicesAsync());
         }
+
+        [HttpDelete("{serviceId}")]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> DeleteService([FromRoute] int serviceId)
+        {
+            try
+            {
+                await serviceService.DeleteServiceAsync(serviceId);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
