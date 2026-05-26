@@ -29,5 +29,44 @@ namespace PL.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> GetAppointments()
+        {
+            return Ok(await appointmentService.GetAllAppointmentsAsync());
+        }
+
+        [HttpDelete("{appointmentId}")]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> DeleteAppointment([FromRoute] int appointmentId)
+        {
+            try
+            {
+                await appointmentService.DeleteAppointmentAsync(appointmentId);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet("me")]
+        [Authorize(Roles = "Patient")]
+        public async Task<IActionResult> GetMyAppointments()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            try
+            {
+                var appointments = await appointmentService.GetAppointmentsByPatientIdAsync(userId);
+                return Ok(appointments);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }

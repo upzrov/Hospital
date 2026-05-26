@@ -5,8 +5,7 @@ namespace DAL.Models
         public int AppointmentId { get; set; }
         public DateTime StartAt { get; set; }
         public DateTime EndAt { get; set; }
-        public string? Status { get; set; }
-
+        
         public int DoctorId { get; set; }
         public  Doctor Doctor { get; set; }
 

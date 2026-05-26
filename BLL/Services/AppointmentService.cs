@@ -12,6 +12,7 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
     UserManager<User> userManager,
     IRepository<Service> serviceRepository,
     IRepository<Doctor> doctorRepository,
+    IRepository<Patient> patientRepository,
     IMapper mapper) : IAppointmentService
 {
     public async Task<AppointmentDto> CreateAsync(CreateAppointmentDto dto, string userId)
@@ -41,6 +42,47 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
         await appointmentRepository.CreateAsync(appointment);
         
         return mapper.Map<AppointmentDto>(appointment);
+    }
+
+    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsAsync()
+    {
+        var appointments = await appointmentRepository.GetAllAsync();
+        
+        return appointments
+            .OrderByDescending(a => a.StartAt)
+            .Select(a => mapper.Map<AppointmentDto>(a));
+    }
+
+    public async Task DeleteAppointmentAsync(int appointmentId)
+    {
+        var appointment = await appointmentRepository.GetByIdAsync(appointmentId);
+
+        if (appointment == null)
+        {
+            throw new KeyNotFoundException("Appointment not found");
+        }
+
+        await appointmentRepository.DeleteAsync(appointment);
+    }
+
+    public async Task<IEnumerable<AppointmentDto>> GetAppointmentsByPatientIdAsync(string? userId)
+    {
+        var patient = patientRepository
+            .Query()
+            .FirstOrDefault(p => p.UserId == userId);
+
+        if (patient == null)
+        {
+            throw new KeyNotFoundException("Patient not found");
+        }
+
+        var appointments = await appointmentRepository
+            .Query()
+            .Where(a => a.PatientId == patient.PatientId)
+            .OrderByDescending(a => a.StartAt)
+            .ToListAsync();
+        
+        return appointments.Select(a => mapper.Map<AppointmentDto>(a));   
     }
 
     private async Task ValidateAppointmentAsync(Service? service, Doctor? doctor, CreateAppointmentDto dto)
