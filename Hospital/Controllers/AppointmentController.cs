@@ -51,5 +51,22 @@ namespace PL.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        [HttpGet("me")]
+        [Authorize(Roles = "Patient")]
+        public async Task<IActionResult> GetMyAppointments()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            try
+            {
+                var appointments = await appointmentService.GetAppointmentsByPatientIdAsync(userId);
+                return Ok(appointments);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }
