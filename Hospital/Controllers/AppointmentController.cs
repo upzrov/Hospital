@@ -29,5 +29,12 @@ namespace PL.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> GetAppointments()
+        {
+            return Ok(await appointmentService.GetAllAppointmentsAsync());
+        }
     }
 }

@@ -43,6 +43,13 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
         return mapper.Map<AppointmentDto>(appointment);
     }
 
+    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsAsync()
+    {
+        var appointments = await appointmentRepository.GetAllAsync();
+        
+        return appointments.Select(a => mapper.Map<AppointmentDto>(a));
+    }
+
     private async Task ValidateAppointmentAsync(Service? service, Doctor? doctor, CreateAppointmentDto dto)
     {
         if (service == null)
