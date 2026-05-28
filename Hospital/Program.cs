@@ -1,4 +1,6 @@
+using System.Net;
 using System.Text;
+using BLL.DTOs.Exception;
 using BLL.Interfaces;
 using BLL.Mapping;
 using BLL.Services;
@@ -7,6 +9,7 @@ using DAL.Interfaces;
 using DAL.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
@@ -54,6 +57,30 @@ builder.Services.AddAuthentication(options =>
             context.Token = context.Request.Cookies["token"];
             return Task.CompletedTask;
         }
+    };
+});
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+            .Where(x => x.Value!.Errors.Count > 0)
+            .ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value!.Errors
+                    .Select(e => e.ErrorMessage)
+                    .ToArray()
+            );
+
+        var response = new ErrorResponse
+        {
+            Message = "Validation failed",
+            Errors = errors,
+            StatusCode = (int)HttpStatusCode.BadRequest
+        };
+
+        return new BadRequestObjectResult(response);
     };
 });
 
