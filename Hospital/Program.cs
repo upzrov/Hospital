@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using PL.ExceptionHandling;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,7 +25,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<HospitalContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"),
-    b => b.MigrationsAssembly("DAL")
+    b => b.MigrationsAssembly("Hospital.DAL")
 ));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -59,6 +60,9 @@ builder.Services.AddAuthentication(options =>
         }
     };
 });
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -117,6 +121,8 @@ using (var scope = app.Services.CreateScope())
     context.Database.EnsureCreated();
     await DbInitializer.Initialize(services);
 }
+
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 

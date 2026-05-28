@@ -13,15 +13,8 @@ namespace PL.Controllers
         [Authorize(Roles="Administrator")]
         public async Task<IActionResult> CreateDoctor([FromBody] CreateDoctorDto model)
         {
-            try
-            {
-                var doctor = await doctorService.CreateAsync(model);
-                return Ok(doctor);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var doctor = await doctorService.CreateAsync(model);
+            return Ok(doctor);
         }
 
         [HttpGet]
@@ -34,38 +27,16 @@ namespace PL.Controllers
         [HttpPut("{doctorId}/services/{serviceId}")]
         public async Task<IActionResult> AssignServiceToDoctor(int doctorId, int serviceId)
         {
-            try
-            {
-                await doctorService.AssignServiceToDoctorAsync(doctorId, serviceId);
-                return NoContent();
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await doctorService.AssignServiceToDoctorAsync(doctorId, serviceId);
+            return NoContent();
         }
 
         [Authorize(Roles = "Administrator")]
         [HttpDelete("{doctorId}")]
         public async Task<IActionResult> DeleteDoctor([FromRoute] int doctorId)
         {
-            try
-            {
-                await doctorService.DeleteDoctorAsync(doctorId);
-                return NoContent();
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await doctorService.DeleteDoctorAsync(doctorId);
+            return NoContent();
         }
     }
 }
