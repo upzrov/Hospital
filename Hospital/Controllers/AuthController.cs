@@ -15,7 +15,7 @@ namespace PL.Controllers
 
             if (!result.IsSuccess)
             {
-                return BadRequest(result.ErrorMessage);
+                return BadRequest(result.Error);
             }
 
             SetTokenCookie(result.Token!, result.Expiration!.Value);
@@ -30,7 +30,7 @@ namespace PL.Controllers
 
             if (!result.IsSuccess)
             {
-                return Unauthorized(result.ErrorMessage);
+                return Unauthorized(result.Error);
             }
 
             SetTokenCookie(result.Token!, result.Expiration!.Value);

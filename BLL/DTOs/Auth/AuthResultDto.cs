@@ -1,9 +1,11 @@
-﻿namespace BLL.DTOs
+﻿using BLL.DTOs.Exception;
+
+namespace BLL.DTOs
 {
     public class AuthResult
     {
         public bool IsSuccess { get; set; }
-        public string? ErrorMessage { get; set; }
+        public ErrorResponse? Error { get; set; }
         public string? Token { get; set; }
         public DateTime? Expiration { get; set; }
         public string? Id { get; set; }
