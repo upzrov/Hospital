@@ -1,6 +1,7 @@
 using AutoMapper;
 using BLL.DTOs;
 using BLL.Interfaces;
+using DAL.Enums;
 using DAL.Interfaces;
 using DAL.Models;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,8 @@ public class DoctorService(IRepository<Doctor> doctorRepository, IRepository<Ser
         }
         
         var doctor = mapper.Map<Doctor>(dto);
+        
+        doctor.PhotoUrl = GeneratePhoto(dto.Gender);
 
         await doctorRepository.CreateAsync(doctor);
 
@@ -95,5 +98,19 @@ public class DoctorService(IRepository<Doctor> doctorRepository, IRepository<Ser
         {
             throw new InvalidOperationException("Doctor already has this service");
         }
+    }
+
+    private string GeneratePhoto(Gender gender)
+    {
+        var category = gender switch
+        {
+            Gender.Male => "men",
+            Gender.Female => "women",
+            _ => "men"
+        };
+
+        var number = Random.Shared.Next(1, 100);
+
+        return $"https://randomuser.me/api/portraits/{category}/{number}.jpg";
     }
 }

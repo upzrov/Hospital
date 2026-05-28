@@ -95,7 +95,8 @@ namespace DAL.Data
                     FullName = "Іван Петренко",
                     Specialty = Specialty.Therapist,
                     Email = "ivan@hospital.com",
-                    PhoneNumber = "+380501112233"
+                    PhoneNumber = "+380501112233",
+                    PhotoUrl = "https://randomuser.me/api/portraits/men/32.jpg"
                 };
                 if (general1 != null) doc1.Services.Add(general1);
                 if (general2 != null) doc1.Services.Add(general2);
@@ -105,7 +106,8 @@ namespace DAL.Data
                     FullName = "Анна Сидоренко",
                     Specialty = Specialty.Therapist,
                     Email = "anna.sidorenko@hospital.com",
-                    PhoneNumber = "+380501234567"
+                    PhoneNumber = "+380501234567",
+                    PhotoUrl = "https://randomuser.me/api/portraits/women/72.jpg"
                 };
                 if (general1 != null) doc2.Services.Add(general1);
 
@@ -115,7 +117,8 @@ namespace DAL.Data
                     FullName = "Марія Коваль",
                     Specialty = Specialty.Cardiologist,
                     Email = "m.koval@hospital.com",
-                    PhoneNumber = "+380671234567"
+                    PhoneNumber = "+380671234567",
+                    PhotoUrl = "https://randomuser.me/api/portraits/women/22.jpg"
                 };
                 if (cardio1 != null) doc3.Services.Add(cardio1);
                 if (cardio2 != null) doc3.Services.Add(cardio2);
@@ -125,7 +128,8 @@ namespace DAL.Data
                     FullName = "Сергій Мартинов",
                     Specialty = Specialty.Cardiologist,
                     Email = "s.martinov@hospital.com",
-                    PhoneNumber = "+380671112233"
+                    PhoneNumber = "+380671112233",
+                    PhotoUrl = "https://randomuser.me/api/portraits/men/22.jpg"
                 };
                 if (cardio1 != null) doc4.Services.Add(cardio1);
 
@@ -135,7 +139,8 @@ namespace DAL.Data
                     FullName = "Ольга Бондар",
                     Specialty = Specialty.Dentist,
                     Email = "o.bondar@hospital.com",
-                    PhoneNumber = "+380631112233"
+                    PhoneNumber = "+380631112233",
+                    PhotoUrl = "https://randomuser.me/api/portraits/women/21.jpg"
                 };
                 if (dental1 != null) doc5.Services.Add(dental1);
                 if (dental2 != null) doc5.Services.Add(dental2);
@@ -145,7 +150,8 @@ namespace DAL.Data
                     FullName = "Павло Захарченко",
                     Specialty = Specialty.Dentist,
                     Email = "p.zakharenko@hospital.com",
-                    PhoneNumber = "+380639876543"
+                    PhoneNumber = "+380639876543",
+                    PhotoUrl = "https://randomuser.me/api/portraits/men/21.jpg"
                 };
                 if (dental1 != null) doc6.Services.Add(dental1);
 
@@ -155,7 +161,8 @@ namespace DAL.Data
                     FullName = "Петро Шевченко",
                     Specialty = Specialty.Neurologist,
                     Email = "p.shevchenko@hospital.com",
-                    PhoneNumber = "+380981234567"
+                    PhoneNumber = "+380981234567",
+                    PhotoUrl = "https://randomuser.me/api/portraits/men/20.jpg"
                 };
                 if (neuro1 != null) doc7.Services.Add(neuro1);
                 if (neuro2 != null) doc7.Services.Add(neuro2);
@@ -165,7 +172,8 @@ namespace DAL.Data
                     FullName = "Людмила Грищенко",
                     Specialty = Specialty.Neurologist,
                     Email = "l.grishchenko@hospital.com",
-                    PhoneNumber = "+380989876543"
+                    PhoneNumber = "+380989876543",
+                    PhotoUrl = "https://randomuser.me/api/portraits/women/20.jpg"
                 };
                 if (neuro1 != null) doc8.Services.Add(neuro1);
 
