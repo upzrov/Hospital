@@ -13,15 +13,8 @@ namespace PL.Controllers
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> CreateService([FromBody] CreateServiceDto model)
         {
-            try
-            {
-                var service = await serviceService.CreateServiceAsync(model);
-                return Ok(service);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var service = await serviceService.CreateServiceAsync(model);
+            return Ok(service);
         }
 
         [HttpGet]
@@ -34,19 +27,8 @@ namespace PL.Controllers
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteService([FromRoute] int serviceId)
         {
-            try
-            {
-                await serviceService.DeleteServiceAsync(serviceId);
-                return NoContent();
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await serviceService.DeleteServiceAsync(serviceId);
+            return NoContent();
         }
     }
 }

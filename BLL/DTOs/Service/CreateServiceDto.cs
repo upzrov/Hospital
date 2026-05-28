@@ -15,11 +15,14 @@ public class CreateServiceDto
     [MaxLength(1000, ErrorMessage = "Description must be at most 1000 characters long")]
     public required string Description { get; set; }
     
+    [Required(ErrorMessage = "Price is required")]
     [Range(0, double.MaxValue, ErrorMessage = "Price must be a positive number")]
     public decimal Price { get; set; }
+    
+    [Required(ErrorMessage = "Duration is required")]
     [Range(0, int.MaxValue, ErrorMessage = "Duration must be a positive number")]
-
     public int DurationMinutes { get; set; }
     
+    [Required(ErrorMessage = "Specialty is required")]
     public Specialty Specialty { get; set; }
 }

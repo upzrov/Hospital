@@ -1,4 +1,6 @@
+using System.Net;
 using System.Text;
+using BLL.DTOs.Exception;
 using BLL.Interfaces;
 using BLL.Mapping;
 using BLL.Services;
@@ -7,8 +9,10 @@ using DAL.Interfaces;
 using DAL.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using PL.ExceptionHandling;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +25,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<HospitalContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"),
-    b => b.MigrationsAssembly("DAL")
+    b => b.MigrationsAssembly("Hospital.DAL")
 ));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -54,6 +58,33 @@ builder.Services.AddAuthentication(options =>
             context.Token = context.Request.Cookies["token"];
             return Task.CompletedTask;
         }
+    };
+});
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+            .Where(x => x.Value!.Errors.Count > 0)
+            .ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value!.Errors
+                    .Select(e => e.ErrorMessage)
+                    .ToArray()
+            );
+
+        var response = new ErrorResponse
+        {
+            Message = "Validation failed",
+            Errors = errors,
+            StatusCode = (int)HttpStatusCode.BadRequest
+        };
+
+        return new BadRequestObjectResult(response);
     };
 });
 
@@ -90,6 +121,8 @@ using (var scope = app.Services.CreateScope())
     context.Database.EnsureCreated();
     await DbInitializer.Initialize(services);
 }
+
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 

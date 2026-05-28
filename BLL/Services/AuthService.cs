@@ -1,7 +1,9 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using BLL.DTOs;
+using BLL.DTOs.Exception;
 using BLL.Interfaces;
 using DAL.Models;
 using Microsoft.AspNetCore.Identity;
@@ -18,7 +20,12 @@ namespace BLL.Services
             var existingUser = await userManager.FindByEmailAsync(model.Email);
             if (existingUser != null)
             {
-                return new AuthResult { IsSuccess = false, ErrorMessage = "User already exists." };
+                return new AuthResult { IsSuccess = false, Error = new ErrorResponse
+                {
+                    Message = "User already exists.",
+                    StatusCode = (int) HttpStatusCode.BadRequest
+                }
+                };
             }
 
             var user = new User
@@ -33,8 +40,16 @@ namespace BLL.Services
 
             if (!result.Succeeded)
             {
-                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-                return new AuthResult { IsSuccess = false, ErrorMessage = errors };
+                return new AuthResult
+                {
+                    IsSuccess = false, Error = new ErrorResponse
+                    {
+                        Message = "Validation failed",
+                        Errors = new Dictionary<string, string[]>
+                            { { "password", result.Errors.Select(e => e.Description).ToArray() } },
+                        StatusCode = (int) HttpStatusCode.BadRequest
+                    }
+                };
             }
 
             var patient = await patientService.CreateAsync(new CreatePatientDto
@@ -58,13 +73,21 @@ namespace BLL.Services
             var user = await userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                return new AuthResult { IsSuccess = false, ErrorMessage = "Invalid email or password." };
+                return new AuthResult { IsSuccess = false, Error = new ErrorResponse
+                {
+                    Message = "Invalid password or email",
+                    StatusCode = (int) HttpStatusCode.BadRequest
+                } };
             }
 
             var isPasswordValid = await userManager.CheckPasswordAsync(user, model.Password);
             if (!isPasswordValid)
             {
-                return new AuthResult { IsSuccess = false, ErrorMessage = "Invalid email or password." };
+                return new AuthResult { IsSuccess = false, Error = new ErrorResponse
+                {
+                    Message = "Invalid password or email",
+                    StatusCode = (int) HttpStatusCode.BadRequest
+                } };
             }
 
             return await GenerateAuthResultAsync(user);
