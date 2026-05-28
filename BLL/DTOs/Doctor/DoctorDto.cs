@@ -10,6 +10,8 @@ public class DoctorDto
     public required Specialty Specialty { get; set; }
     public required string Email { get; set; }
     public string? PhoneNumber { get; set; }
+    public string? PhotoUrl { get; set; }
+    public Gender Gender { get; set; }
     public IEnumerable<ServiceDto> Services { get; set; } = [];
     public IEnumerable<AppointmentDto> Appointments { get; set; } = [];
 }
