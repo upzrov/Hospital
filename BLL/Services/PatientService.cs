@@ -11,6 +11,8 @@ public class PatientService(IRepository<Patient> repository, IMapper mapper): IP
 {
     public async Task<PatientDto> CreateAsync(CreatePatientDto dto) 
     {
+        ValidateCreate(dto);
+        
         var patient = mapper.Map<Patient>(dto);
         
         await repository.CreateAsync(patient);
@@ -37,7 +39,15 @@ public class PatientService(IRepository<Patient> repository, IMapper mapper): IP
         await repository.DeleteAsync(patient!);
     }
 
-    public void ValidateDelete(Patient? patient)
+    private void ValidateCreate(CreatePatientDto dto)
+    {
+        if (dto.DateOfBirth > DateTime.UtcNow)
+        {
+            throw new ArgumentException("Date of birth cannot be in the future");
+        }
+    }
+    
+    private void ValidateDelete(Patient? patient)
     {
         if (patient == null)
         {
