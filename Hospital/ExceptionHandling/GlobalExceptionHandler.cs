@@ -15,13 +15,13 @@ public class GlobalExceptionHandler : IExceptionHandler
             InvalidOperationException => HttpStatusCode.BadRequest,
             ArgumentException => HttpStatusCode.BadRequest,
             KeyNotFoundException => HttpStatusCode.NotFound,
-            ValidationIdentityException => HttpStatusCode.BadRequest,
+            IdentityValidationException => HttpStatusCode.BadRequest,
             _ => HttpStatusCode.InternalServerError
         };
         
         httpContext.Response.StatusCode = (int)statusCode;
 
-        if (exception is ValidationIdentityException ex)
+        if (exception is IdentityValidationException ex)
         {
             await httpContext.Response.WriteAsJsonAsync(new ErrorResponse
             {

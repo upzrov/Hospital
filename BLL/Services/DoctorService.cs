@@ -32,7 +32,7 @@ public class DoctorService(IRepository<Doctor> doctorRepository, IRepository<Ser
 
         if (!result.Succeeded)
         {
-            throw new ValidationIdentityException(result.Errors);
+            throw new IdentityValidationException(result.Errors);
         }
         
         if (await roleManager.RoleExistsAsync("Patient"))

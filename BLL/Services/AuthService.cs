@@ -41,7 +41,7 @@ namespace BLL.Services
 
             if (!result.Succeeded)
             {
-                throw new ValidationIdentityException(result.Errors);
+                throw new IdentityValidationException(result.Errors);
             }
 
             var patient = await patientService.CreateAsync(new CreatePatientDto
