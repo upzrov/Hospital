@@ -48,7 +48,6 @@ public class DoctorService(IRepository<Doctor> doctorRepository, IRepository<Ser
             UserId = user.Id,
             Specialty = dto.Specialty,
             PhotoUrl = GeneratePhoto(dto.Gender),
-            PhoneNumber = dto.PhoneNumber
         };
 
         await doctorRepository.CreateAsync(doctor);

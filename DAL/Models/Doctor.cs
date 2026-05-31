@@ -8,7 +8,6 @@ namespace DAL.Models
         public required string FullName { get; set; }
         public required Specialty Specialty { get; set; }
         public required string Email { get; set; }
-        public string? PhoneNumber { get; set; }
         public string? PhotoUrl { get; set; }
         public Gender Gender { get; set; }
         public string UserId { get; set; }

@@ -20,10 +20,6 @@ public class CreateDoctorDto
     [Required(ErrorMessage = "Password is required")]
     public string Password { get; set; } = string.Empty;
     
-    [Required(ErrorMessage = "Phone number is required")]
-    [RegularExpression(@"^\+?\d{10,15}$", ErrorMessage = "Invalid phone number")]
-    public required string? PhoneNumber { get; set; }
-    
     [Required(ErrorMessage = "Gender is required")]
     [EnumDataType(typeof(Gender))]
     public Gender Gender { get; set; }
