@@ -1,5 +1,6 @@
 using System.Net;
 using BLL.DTOs.Exception;
+using BLL.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace PL.ExceptionHandling;
@@ -14,11 +15,25 @@ public class GlobalExceptionHandler : IExceptionHandler
             InvalidOperationException => HttpStatusCode.BadRequest,
             ArgumentException => HttpStatusCode.BadRequest,
             KeyNotFoundException => HttpStatusCode.NotFound,
+            ValidationIdentityException => HttpStatusCode.BadRequest,
             _ => HttpStatusCode.InternalServerError
         };
         
         httpContext.Response.StatusCode = (int)statusCode;
 
+        if (exception is ValidationIdentityException ex)
+        {
+            await httpContext.Response.WriteAsJsonAsync(new ErrorResponse
+            {
+                Message = "Validation failed",
+                Errors = new Dictionary<string, string[]>
+                    { { "password", ex.Errors.Select(e => e.Description).ToArray() } },
+                StatusCode = (int) HttpStatusCode.BadRequest
+            });
+            
+            return true;
+        }
+        
         await httpContext.Response.WriteAsJsonAsync(new ErrorResponse
         {
             Message = exception.Message,

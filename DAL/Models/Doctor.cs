@@ -11,7 +11,8 @@ namespace DAL.Models
         public string? PhoneNumber { get; set; }
         public string? PhotoUrl { get; set; }
         public Gender Gender { get; set; }
-
+        public string UserId { get; set; }
+        public User User { get; set; }
         public List<Appointment> Appointments { get; } = [];
         public ICollection<Service> Services { get; set; } = [];
     }

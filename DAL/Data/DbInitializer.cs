@@ -13,7 +13,7 @@ namespace DAL.Data
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
 
-            string[] roleNames = ["Administrator", "Manager", "Patient"];
+            string[] roleNames = ["Administrator", "Manager", "Patient", "Doctor"];
 
             foreach (var roleName in roleNames)
             {
@@ -177,12 +177,31 @@ namespace DAL.Data
                 };
                 if (neuro1 != null) doc8.Services.Add(neuro1);
 
+                
+                var d1 = await EnsureUser("doctor1@hospital.com", "Doctor123!", doc1.FullName, "Doctor");
+                var d2 = await EnsureUser("doctor2@hospital.com", "Doctor123!", doc2.FullName, "Doctor");
+                var d3 = await EnsureUser("doctor3@hospital.com", "Doctor123!", doc3.FullName, "Doctor");
+                var d4 = await EnsureUser("doctor4@hospital.com", "Doctor123!", doc4.FullName, "Doctor");
+                var d5 = await EnsureUser("doctor5@hospital.com", "Doctor123!", doc5.FullName, "Doctor");
+                var d6 = await EnsureUser("doctor6@hospital.com", "Doctor123!", doc6.FullName, "Doctor");
+                var d7 = await EnsureUser("doctor7@hospital.com", "Doctor123!", doc7.FullName, "Doctor");
+                var d8 = await EnsureUser("doctor8@hospital.com", "Doctor123!", doc8.FullName, "Doctor");
+
+                doc1.UserId = d1.Id;
+                doc2.UserId = d2.Id;
+                doc3.UserId = d3.Id;
+                doc4.UserId = d4.Id;
+                doc5.UserId = d5.Id;
+                doc6.UserId = d6.Id;
+                doc7.UserId = d7.Id;
+                doc8.UserId = d8.Id;
+
                 context.Doctors.AddRange(doc1, doc2, doc3, doc4, doc5, doc6, doc7, doc8);
                 await context.SaveChangesAsync();
             }
 
-            // Users (patients)
-            async Task<User> EnsureUser(string email, string pwd, string fullName)
+            // Users 
+            async Task<User> EnsureUser(string email, string pwd, string fullName, string role)
             {
                 var u = await userManager.FindByEmailAsync(email);
                 if (u != null) return u;
@@ -198,47 +217,47 @@ namespace DAL.Data
                 
                 if (r.Succeeded)
                 {
-                    if (await roleManager.RoleExistsAsync("Patient"))
-                        await userManager.AddToRoleAsync(u, "Patient");
+                    if (await roleManager.RoleExistsAsync(role))
+                        await userManager.AddToRoleAsync(u, role);
                 }
                 return u;
             }
 
-            var u1 = await EnsureUser("patient1@hospital.com", "Patient123!", "Іван Іванов");
-            var u2 = await EnsureUser("patient2@hospital.com", "Patient123!", "Олена Іванова");
-            var u3 = await EnsureUser("patient3@hospital.com", "Patient123!", "Максим Петров");
-            var u4 = await EnsureUser("patient4@hospital.com", "Patient123!", "Тетяна Сидоренко");
-            var u5 = await EnsureUser("patient5@hospital.com", "Patient123!", "Дмитро Коваленко");
-            var u6 = await EnsureUser("patient6@hospital.com", "Patient123!", "Марія Грищенко");
-            var u7 = await EnsureUser("patient7@hospital.com", "Patient123!", "Олексій Зінкевич");
+            var p1 = await EnsureUser("patient1@hospital.com", "Patient123!", "Іван Іванов", "Patient");
+            var p2 = await EnsureUser("patient2@hospital.com", "Patient123!", "Олена Іванова", "Patient");
+            var p3 = await EnsureUser("patient3@hospital.com", "Patient123!", "Максим Петров", "Patient");
+            var p4 = await EnsureUser("patient4@hospital.com", "Patient123!", "Тетяна Сидоренко", "Patient");
+            var p5 = await EnsureUser("patient5@hospital.com", "Patient123!", "Дмитро Коваленко", "Patient");
+            var p6 = await EnsureUser("patient6@hospital.com", "Patient123!", "Марія Грищенко", "Patient");
+            var p7 = await EnsureUser("patient7@hospital.com", "Patient123!", "Олексій Зінкевич", "Patient");
 
-            if (!await context.Patients.AnyAsync(p => p.UserId == u1.Id))
+            if (!await context.Patients.AnyAsync(p => p.UserId == p1.Id))
             {
-                context.Patients.Add(new Patient { UserId = u1.Id, FullName = u1.Name });
+                context.Patients.Add(new Patient { UserId = p1.Id, FullName = p1.Name });
             }
-            if (!await context.Patients.AnyAsync(p => p.UserId == u2.Id))
+            if (!await context.Patients.AnyAsync(p => p.UserId == p2.Id))
             {
-                context.Patients.Add(new Patient { UserId = u2.Id, FullName = u2.Name });
+                context.Patients.Add(new Patient { UserId = p2.Id, FullName = p2.Name });
             }
-            if (!await context.Patients.AnyAsync(p => p.UserId == u3.Id))
+            if (!await context.Patients.AnyAsync(p => p.UserId == p3.Id))
             {
-                context.Patients.Add(new Patient { UserId = u3.Id, FullName = u3.Name });
+                context.Patients.Add(new Patient { UserId = p3.Id, FullName = p3.Name });
             }
-            if (!await context.Patients.AnyAsync(p => p.UserId == u4.Id))
+            if (!await context.Patients.AnyAsync(p => p.UserId == p4.Id))
             {
-                context.Patients.Add(new Patient { UserId = u4.Id, FullName = u4.Name });
+                context.Patients.Add(new Patient { UserId = p4.Id, FullName = p4.Name });
             }
-            if (!await context.Patients.AnyAsync(p => p.UserId == u5.Id))
+            if (!await context.Patients.AnyAsync(p => p.UserId == p5.Id))
             {
-                context.Patients.Add(new Patient { UserId = u5.Id, FullName = u5.Name });
+                context.Patients.Add(new Patient { UserId = p5.Id, FullName = p5.Name });
             }
-            if (!await context.Patients.AnyAsync(p => p.UserId == u6.Id))
+            if (!await context.Patients.AnyAsync(p => p.UserId == p6.Id))
             {
-                context.Patients.Add(new Patient { UserId = u6.Id, FullName = u6.Name });
+                context.Patients.Add(new Patient { UserId = p6.Id, FullName = p6.Name });
             }
-            if (!await context.Patients.AnyAsync(p => p.UserId == u7.Id))
+            if (!await context.Patients.AnyAsync(p => p.UserId == p7.Id))
             {
-                context.Patients.Add(new Patient { UserId = u7.Id, FullName = u7.Name });
+                context.Patients.Add(new Patient { UserId = p7.Id, FullName = p7.Name });
             }
             await context.SaveChangesAsync();
 

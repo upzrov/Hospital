@@ -25,7 +25,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<HospitalContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"),
-    b => b.MigrationsAssembly("Hospital.DAL")
+    b => b.MigrationsAssembly("DAL")
 ));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
