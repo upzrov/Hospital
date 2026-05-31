@@ -85,6 +85,27 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
         return appointments.Select(a => mapper.Map<AppointmentDto>(a));   
     }
 
+    public async Task<IEnumerable<AppointmentDto>> GetAppointmentsByDoctorIdAsync(string? userId)
+    {
+        var doctor = await appointmentRepository
+            .Query()
+            .Include(a => a.Doctor)
+            .FirstOrDefaultAsync(a => a.Doctor.UserId == userId);
+
+        if (doctor == null)
+        {
+            throw new KeyNotFoundException("Doctor not found");
+        }
+        
+        var appointments = await appointmentRepository
+            .Query()
+            .Where(a => a.DoctorId == doctor.DoctorId)
+            .OrderByDescending(a => a.StartAt)
+            .ToListAsync();
+        
+        return appointments.Select(a => mapper.Map<AppointmentDto>(a));  
+    }
+
     private async Task ValidateAppointmentAsync(Service? service, Doctor? doctor, CreateAppointmentDto dto)
     {
         if (service == null)

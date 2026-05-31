@@ -8,4 +8,5 @@ public interface IAppointmentService
     Task<IEnumerable<AppointmentDto>> GetAllAppointmentsAsync();
     Task DeleteAppointmentAsync(int appointmentId);
     Task<IEnumerable<AppointmentDto>> GetAppointmentsByPatientIdAsync(string? userId);
+    Task<IEnumerable<AppointmentDto>> GetAppointmentsByDoctorIdAsync(string? userId);
 }
