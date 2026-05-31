@@ -35,13 +35,23 @@ namespace PL.Controllers
             return NoContent();
         }
 
-        [HttpGet("me")]
+        [HttpGet("patient/appointments")]
         [Authorize(Roles = "Patient")]
-        public async Task<IActionResult> GetMyAppointments()
+        public async Task<IActionResult> GetPatientAppointments()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             
             var appointments = await appointmentService.GetAppointmentsByPatientIdAsync(userId);
+            return Ok(appointments);
+        }
+        
+        [HttpGet("doctor/appointments")]
+        [Authorize(Roles = "Doctor")]
+        public async Task<IActionResult> GetDoctorAppointments()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            
+            var appointments = await appointmentService.GetAppointmentsByDoctorIdAsync(userId);
             return Ok(appointments);
         }
     }

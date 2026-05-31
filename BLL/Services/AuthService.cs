@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using BLL.DTOs;
 using BLL.DTOs.Exception;
+using BLL.Exceptions;
 using BLL.Interfaces;
 using DAL.Models;
 using Microsoft.AspNetCore.Identity;
@@ -40,16 +41,7 @@ namespace BLL.Services
 
             if (!result.Succeeded)
             {
-                return new AuthResult
-                {
-                    IsSuccess = false, Error = new ErrorResponse
-                    {
-                        Message = "Validation failed",
-                        Errors = new Dictionary<string, string[]>
-                            { { "password", result.Errors.Select(e => e.Description).ToArray() } },
-                        StatusCode = (int) HttpStatusCode.BadRequest
-                    }
-                };
+                throw new IdentityValidationException(result.Errors);
             }
 
             var patient = await patientService.CreateAsync(new CreatePatientDto

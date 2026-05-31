@@ -1,15 +1,17 @@
 using AutoMapper;
 using BLL.DTOs;
+using BLL.Exceptions;
 using BLL.Interfaces;
 using DAL.Enums;
 using DAL.Interfaces;
 using DAL.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services;
 
 public class DoctorService(IRepository<Doctor> doctorRepository, IRepository<Service> serviceRepository,
-    IMapper mapper):IDoctorService
+    IMapper mapper, UserManager<User> userManager, RoleManager<IdentityRole> roleManager):IDoctorService
 {
     public async Task<DoctorDto> CreateAsync(CreateDoctorDto dto)
     {
@@ -17,10 +19,36 @@ public class DoctorService(IRepository<Doctor> doctorRepository, IRepository<Ser
         {
             throw new ArgumentException("Invalid specialty");
         }
+
+        var user = new User
+        {
+            Email = dto.Email,
+            UserName = dto.Email,
+            Name = dto.FullName,
+            SecurityStamp = Guid.NewGuid().ToString()
+        };
         
-        var doctor = mapper.Map<Doctor>(dto);
+        var result = await userManager.CreateAsync(user, dto.Password);
+
+        if (!result.Succeeded)
+        {
+            throw new IdentityValidationException(result.Errors);
+        }
         
-        doctor.PhotoUrl = GeneratePhoto(dto.Gender);
+        if (await roleManager.RoleExistsAsync("Patient"))
+        {
+            await userManager.AddToRoleAsync(user, "Patient");
+        }
+
+        var doctor = new Doctor
+        {
+            FullName = dto.FullName,
+            Email = dto.Email,
+            Gender = dto.Gender,
+            UserId = user.Id,
+            Specialty = dto.Specialty,
+            PhotoUrl = GeneratePhoto(dto.Gender),
+        };
 
         await doctorRepository.CreateAsync(doctor);
 
