@@ -108,7 +108,10 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
 
     public async Task<IEnumerable<AvailableSlotDto>> GetAvailableSlotsAsync(int doctorId, int serviceId, DateTime date)
     {
-        var doctor = await doctorRepository.GetByIdAsync(doctorId);
+        var doctor = await doctorRepository
+            .Query()
+            .Include(d => d.Services)
+            .FirstOrDefaultAsync(d => d.DoctorId == doctorId);
 
         if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
         {
@@ -119,18 +122,18 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
         {
             throw new KeyNotFoundException("Doctor not found");
         }
+
+        if (!doctor.Services.Any(s => s.ServiceId == serviceId))
+        {
+            throw new KeyNotFoundException("Doctor does not have this service");
+        }
         
         var service = await serviceRepository.GetByIdAsync(serviceId);
-
-        if (service == null)
-        {
-            throw new KeyNotFoundException("Service not found");
-        }
         
         DateTime startWork = date.Date + doctor.WorkStart.ToTimeSpan();
         DateTime endWork = date.Date + doctor.WorkEnd.ToTimeSpan();
         
-        var slots = GenerateSlots(service, startWork, endWork);
+        var slots = GenerateSlots(service!, startWork, endWork);
         
         var doctorAppointments = await appointmentRepository
             .Query()
