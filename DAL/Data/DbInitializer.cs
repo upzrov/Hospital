@@ -266,8 +266,8 @@ namespace DAL.Data
                     var doc = doctors[0];
                     var svc1 = doc.Services.First();
                     var svc2 = doc.Services.Count > 1 ? doc.Services.Last() : svc1;
-                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(9), EndAt = baseDate.AddHours(9.5), DoctorId = doc.DoctorId, PatientId = patients[0].PatientId, ServiceId = svc1.ServiceId });
-                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(10.5), EndAt = baseDate.AddHours(11.5), DoctorId = doc.DoctorId, PatientId = patients[1].PatientId, ServiceId = svc2.ServiceId });
+                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(9), EndAt = baseDate.AddHours(9).AddMinutes(svc1.DurationMinutes), DoctorId = doc.DoctorId, PatientId = patients[0].PatientId, ServiceId = svc1.ServiceId });
+                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(10.5), EndAt = baseDate.AddHours(10.5).AddMinutes(svc2.DurationMinutes), DoctorId = doc.DoctorId, PatientId = patients[1].PatientId, ServiceId = svc2.ServiceId });
                 }
 
                 // Doctor 2 (Anna - Therapist)

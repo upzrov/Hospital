@@ -54,5 +54,13 @@ namespace PL.Controllers
             var appointments = await appointmentService.GetAppointmentsByDoctorIdAsync(userId);
             return Ok(appointments);
         }
+
+        [HttpGet("available-slots")]
+        [Authorize(Roles = "Patient")]
+        public async Task<IActionResult> GetAvailableSlots([FromQuery] int doctorId, 
+            [FromQuery] int serviceId, [FromQuery] DateTime date)
+        {
+            return Ok(await appointmentService.GetAvailableSlotsAsync(doctorId, serviceId, date));
+        }
     }
 }

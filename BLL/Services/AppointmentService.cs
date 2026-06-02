@@ -106,6 +106,58 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
         return appointments.Select(a => mapper.Map<AppointmentDto>(a));  
     }
 
+    public async Task<IEnumerable<AvailableSlotDto>> GetAvailableSlotsAsync(int doctorId, int serviceId, DateTime date)
+    {
+        var doctor = await doctorRepository.GetByIdAsync(doctorId);
+
+        if (doctor == null)
+        {
+            throw new KeyNotFoundException("Doctor not found");
+        }
+        
+        var service = await serviceRepository.GetByIdAsync(serviceId);
+
+        if (service == null)
+        {
+            throw new KeyNotFoundException("Service not found");
+        }
+        
+        DateTime startWork = date.Date + TimeSpan.FromHours(9);
+        DateTime endWork = date.Date + TimeSpan.FromHours(18);
+        
+        var slots = GenerateSlots(service, startWork, endWork);
+        
+        var doctorAppointments = await appointmentRepository
+            .Query()
+            .Where(a => a.DoctorId == doctorId && a.StartAt.Date == date.Date)
+            .ToListAsync();
+
+        var availableSlots = slots
+            .Where(s => !doctorAppointments
+                .Any(a => a.StartAt < s.EndAt && a.EndAt > s.StartAt));
+
+        return availableSlots;
+    }
+
+    private IEnumerable<AvailableSlotDto> GenerateSlots(
+        Service service, DateTime startWork, DateTime endWork)
+    {
+        var slots = new List<AvailableSlotDto>();
+
+        for (DateTime i = startWork;
+             i.AddMinutes(service.DurationMinutes) <= endWork;
+             i += TimeSpan.FromMinutes(15))
+        {
+            slots.Add(new AvailableSlotDto
+            {
+                StartAt = i,
+                EndAt = i.AddMinutes(service.DurationMinutes)
+            });
+        }
+
+        return slots;
+    }
+
     private async Task ValidateAppointmentAsync(Service? service, Doctor? doctor, CreateAppointmentDto dto)
     {
         if (service == null)
