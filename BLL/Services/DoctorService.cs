@@ -20,6 +20,11 @@ public class DoctorService(IRepository<Doctor> doctorRepository, IRepository<Ser
             throw new ArgumentException("Invalid specialty");
         }
 
+        if (dto.WorkEnd <= dto.WorkStart)
+        {
+            throw new ArgumentException("Work end must be after work start");
+        }
+
         var user = new User
         {
             Email = dto.Email,

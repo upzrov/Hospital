@@ -10,6 +10,8 @@ namespace DAL.Models
         public required string Email { get; set; }
         public string? PhotoUrl { get; set; }
         public Gender Gender { get; set; }
+        public TimeOnly WorkStart { get; set; }
+        public TimeOnly WorkEnd { get; set; }
         public string UserId { get; set; }
         public User User { get; set; }
         public List<Appointment> Appointments { get; } = [];

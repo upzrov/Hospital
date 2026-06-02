@@ -106,6 +106,66 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
         return appointments.Select(a => mapper.Map<AppointmentDto>(a));  
     }
 
+    public async Task<IEnumerable<AvailableSlotDto>> GetAvailableSlotsAsync(int doctorId, int serviceId, DateTime date)
+    {
+        var doctor = await doctorRepository
+            .Query()
+            .Include(d => d.Services)
+            .FirstOrDefaultAsync(d => d.DoctorId == doctorId);
+
+        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+        {
+            return Enumerable.Empty<AvailableSlotDto>();
+        }
+
+        if (doctor == null)
+        {
+            throw new KeyNotFoundException("Doctor not found");
+        }
+
+        if (!doctor.Services.Any(s => s.ServiceId == serviceId))
+        {
+            throw new KeyNotFoundException("Doctor does not have this service");
+        }
+        
+        var service = await serviceRepository.GetByIdAsync(serviceId);
+        
+        DateTime startWork = date.Date + doctor.WorkStart.ToTimeSpan();
+        DateTime endWork = date.Date + doctor.WorkEnd.ToTimeSpan();
+        
+        var slots = GenerateSlots(service!, startWork, endWork);
+        
+        var doctorAppointments = await appointmentRepository
+            .Query()
+            .Where(a => a.DoctorId == doctorId && a.StartAt.Date == date.Date)
+            .ToListAsync();
+
+        var availableSlots = slots
+            .Where(s => !doctorAppointments
+                .Any(a => a.StartAt < s.EndAt && a.EndAt > s.StartAt));
+
+        return availableSlots;
+    }
+
+    private IEnumerable<AvailableSlotDto> GenerateSlots(
+        Service service, DateTime startWork, DateTime endWork)
+    {
+        var slots = new List<AvailableSlotDto>();
+
+        for (DateTime i = startWork;
+             i.AddMinutes(service.DurationMinutes) <= endWork;
+             i += TimeSpan.FromMinutes(15))
+        {
+            slots.Add(new AvailableSlotDto
+            {
+                StartAt = i,
+                EndAt = i.AddMinutes(service.DurationMinutes)
+            });
+        }
+        
+        return slots;
+    }
+
     private async Task ValidateAppointmentAsync(Service? service, Doctor? doctor, CreateAppointmentDto dto)
     {
         if (service == null)
@@ -122,19 +182,32 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
         {
             throw new InvalidOperationException("Appointment start time must be in the future");
         }
-
-        var newStart = dto.StartAt;
-        var newEnd = dto.StartAt.AddMinutes(service.DurationMinutes);
-
-        var doctorIsBusy = await appointmentRepository.Query()
-            .AnyAsync(a => a.DoctorId == doctor.DoctorId
-                           && newStart < a.EndAt &&
-                           newEnd > a.StartAt);
-
+        
         if (!doctor.Services.Any(d => d.ServiceId == service.ServiceId))
         {
             throw new InvalidOperationException("Doctor does not have this service");
         }
+
+        var newStart = dto.StartAt;
+        var newEnd = dto.StartAt.AddMinutes(service.DurationMinutes);
+        
+        var workStart = dto.StartAt.Date + doctor.WorkStart.ToTimeSpan();
+        var workEnd = dto.StartAt.Date + doctor.WorkEnd.ToTimeSpan();
+
+        if (newStart < workStart || newEnd > workEnd)
+        {
+            throw new InvalidOperationException("Appointment is outside of doctor's working hours");
+        }
+        
+        if (dto.StartAt.DayOfWeek == DayOfWeek.Saturday || dto.StartAt.DayOfWeek == DayOfWeek.Sunday)
+        {
+            throw new InvalidOperationException("Doctor is not available on weekends");
+        }
+        
+        var doctorIsBusy = await appointmentRepository.Query()
+            .AnyAsync(a => a.DoctorId == doctor.DoctorId
+                           && newStart < a.EndAt &&
+                           newEnd > a.StartAt);
         
         if (doctorIsBusy)
         {

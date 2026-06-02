@@ -12,6 +12,10 @@ public class CreateDoctorDto
     
     [Required(ErrorMessage = "Specialty is required")]
     public required Specialty Specialty { get; set; }
+    [Required(ErrorMessage = "Work hours are required")]
+    public TimeOnly WorkStart { get; set; }
+    [Required(ErrorMessage = "Work hours are required")]
+    public TimeOnly WorkEnd { get; set; }
     
     [Required(ErrorMessage = "Email is required")]
     [EmailAddress(ErrorMessage = "Invalid email address")]
