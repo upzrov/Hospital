@@ -14,5 +14,4 @@ public class DoctorDto
     public TimeOnly WorkStart { get; set; }
     public TimeOnly WorkEnd { get; set; }
     public IEnumerable<ServiceDto> Services { get; set; } = [];
-    public IEnumerable<AppointmentDto> Appointments { get; set; } = [];
 }
