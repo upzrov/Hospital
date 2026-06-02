@@ -11,6 +11,8 @@ public class DoctorDto
     public required string Email { get; set; }
     public string? PhotoUrl { get; set; }
     public Gender Gender { get; set; }
+    public TimeOnly WorkStart { get; set; }
+    public TimeOnly WorkEnd { get; set; }
     public IEnumerable<ServiceDto> Services { get; set; } = [];
     public IEnumerable<AppointmentDto> Appointments { get; set; } = [];
 }

@@ -110,6 +110,11 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
     {
         var doctor = await doctorRepository.GetByIdAsync(doctorId);
 
+        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+        {
+            return Enumerable.Empty<AvailableSlotDto>();
+        }
+
         if (doctor == null)
         {
             throw new KeyNotFoundException("Doctor not found");
@@ -122,8 +127,8 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
             throw new KeyNotFoundException("Service not found");
         }
         
-        DateTime startWork = date.Date + TimeSpan.FromHours(9);
-        DateTime endWork = date.Date + TimeSpan.FromHours(18);
+        DateTime startWork = date.Date + doctor.WorkStart.ToTimeSpan();
+        DateTime endWork = date.Date + doctor.WorkEnd.ToTimeSpan();
         
         var slots = GenerateSlots(service, startWork, endWork);
         
@@ -154,7 +159,7 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
                 EndAt = i.AddMinutes(service.DurationMinutes)
             });
         }
-
+        
         return slots;
     }
 
