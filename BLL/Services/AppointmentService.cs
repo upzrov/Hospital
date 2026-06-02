@@ -179,19 +179,32 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
         {
             throw new InvalidOperationException("Appointment start time must be in the future");
         }
-
-        var newStart = dto.StartAt;
-        var newEnd = dto.StartAt.AddMinutes(service.DurationMinutes);
-
-        var doctorIsBusy = await appointmentRepository.Query()
-            .AnyAsync(a => a.DoctorId == doctor.DoctorId
-                           && newStart < a.EndAt &&
-                           newEnd > a.StartAt);
-
+        
         if (!doctor.Services.Any(d => d.ServiceId == service.ServiceId))
         {
             throw new InvalidOperationException("Doctor does not have this service");
         }
+
+        var newStart = dto.StartAt;
+        var newEnd = dto.StartAt.AddMinutes(service.DurationMinutes);
+        
+        var workStart = dto.StartAt.Date + doctor.WorkStart.ToTimeSpan();
+        var workEnd = dto.StartAt.Date + doctor.WorkEnd.ToTimeSpan();
+
+        if (newStart < workStart || newEnd > workEnd)
+        {
+            throw new InvalidOperationException("Appointment is outside of doctor's working hours");
+        }
+        
+        if (dto.StartAt.DayOfWeek == DayOfWeek.Saturday || dto.StartAt.DayOfWeek == DayOfWeek.Sunday)
+        {
+            throw new InvalidOperationException("Doctor is not available on weekends");
+        }
+        
+        var doctorIsBusy = await appointmentRepository.Query()
+            .AnyAsync(a => a.DoctorId == doctor.DoctorId
+                           && newStart < a.EndAt &&
+                           newEnd > a.StartAt);
         
         if (doctorIsBusy)
         {
