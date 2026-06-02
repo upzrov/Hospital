@@ -291,8 +291,8 @@ namespace DAL.Data
                 {
                     var doc = doctors[1];
                     var svc = doc.Services.First();
-                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(12), EndAt = baseDate.AddHours(12.5), DoctorId = doc.DoctorId, PatientId = patients[2].PatientId, ServiceId = svc.ServiceId });
-                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(13), EndAt = baseDate.AddHours(13.5), DoctorId = doc.DoctorId, PatientId = patients[3].PatientId, ServiceId = svc.ServiceId });
+                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(12), EndAt = baseDate.AddHours(12).AddMinutes(svc.DurationMinutes), DoctorId = doc.DoctorId, PatientId = patients[2].PatientId, ServiceId = svc.ServiceId });
+                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(13), EndAt = baseDate.AddHours(13).AddMinutes(svc.DurationMinutes), DoctorId = doc.DoctorId, PatientId = patients[3].PatientId, ServiceId = svc.ServiceId });
                 }
 
                 // Doctor 3 (Maria - Cardiologist)
@@ -301,8 +301,8 @@ namespace DAL.Data
                     var doc = doctors[2];
                     var svc1 = doc.Services.First();
                     var svc2 = doc.Services.Count > 1 ? doc.Services.Last() : svc1;
-                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(9), EndAt = baseDate.AddHours(9.75), DoctorId = doc.DoctorId, PatientId = patients[4].PatientId, ServiceId = svc1.ServiceId });
-                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(10.5), EndAt = baseDate.AddHours(11.5), DoctorId = doc.DoctorId, PatientId = patients[5].PatientId, ServiceId = svc2.ServiceId });
+                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(9), EndAt = baseDate.AddHours(9).AddMinutes(svc1.DurationMinutes), DoctorId = doc.DoctorId, PatientId = patients[4].PatientId, ServiceId = svc1.ServiceId });
+                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(10.5), EndAt = baseDate.AddHours(10.5).AddMinutes(svc2.DurationMinutes), DoctorId = doc.DoctorId, PatientId = patients[5].PatientId, ServiceId = svc2.ServiceId });
                 }
 
                 // Doctor 4 (Sergiy - Cardiologist)
@@ -310,8 +310,8 @@ namespace DAL.Data
                 {
                     var doc = doctors[3];
                     var svc = doc.Services.First();
-                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(12), EndAt = baseDate.AddHours(12.75), DoctorId = doc.DoctorId, PatientId = patients[6].PatientId, ServiceId = svc.ServiceId });
-                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(13.5), EndAt = baseDate.AddHours(14.25), DoctorId = doc.DoctorId, PatientId = patients[0].PatientId, ServiceId = svc.ServiceId });
+                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(12), EndAt = baseDate.AddHours(12).AddMinutes(svc.DurationMinutes), DoctorId = doc.DoctorId, PatientId = patients[6].PatientId, ServiceId = svc.ServiceId });
+                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(13.5), EndAt = baseDate.AddHours(13.5).AddMinutes(svc.DurationMinutes), DoctorId = doc.DoctorId, PatientId = patients[0].PatientId, ServiceId = svc.ServiceId });
                 }
 
                 // Doctor 5 (Olga - Dentist)
@@ -320,8 +320,8 @@ namespace DAL.Data
                     var doc = doctors[4];
                     var svc1 = doc.Services.First();
                     var svc2 = doc.Services.Count > 1 ? doc.Services.Last() : svc1;
-                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(9), EndAt = baseDate.AddHours(9.5), DoctorId = doc.DoctorId, PatientId = patients[1].PatientId, ServiceId = svc1.ServiceId });
-                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(10.5), EndAt = baseDate.AddHours(11.25), DoctorId = doc.DoctorId, PatientId = patients[2].PatientId, ServiceId = svc2.ServiceId });
+                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(9), EndAt = baseDate.AddHours(9).AddMinutes(svc1.DurationMinutes), DoctorId = doc.DoctorId, PatientId = patients[1].PatientId, ServiceId = svc1.ServiceId });
+                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(10.5), EndAt = baseDate.AddHours(10.5).AddMinutes(svc2.DurationMinutes), DoctorId = doc.DoctorId, PatientId = patients[2].PatientId, ServiceId = svc2.ServiceId });
                 }
 
                 // Doctor 6 (Pavlo - Dentist)
@@ -329,8 +329,8 @@ namespace DAL.Data
                 {
                     var doc = doctors[5];
                     var svc = doc.Services.First();
-                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(12), EndAt = baseDate.AddHours(12.5), DoctorId = doc.DoctorId, PatientId = patients[3].PatientId, ServiceId = svc.ServiceId });
-                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(13.5), EndAt = baseDate.AddHours(14), DoctorId = doc.DoctorId, PatientId = patients[4].PatientId, ServiceId = svc.ServiceId });
+                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(12), EndAt = baseDate.AddHours(12).AddMinutes(svc.DurationMinutes), DoctorId = doc.DoctorId, PatientId = patients[3].PatientId, ServiceId = svc.ServiceId });
+                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(13.5), EndAt = baseDate.AddHours(13.5).AddMinutes(svc.DurationMinutes), DoctorId = doc.DoctorId, PatientId = patients[4].PatientId, ServiceId = svc.ServiceId });
                 }
 
                 // Doctor 7 (Petro - Neurologist)
@@ -339,8 +339,8 @@ namespace DAL.Data
                     var doc = doctors[6];
                     var svc1 = doc.Services.First();
                     var svc2 = doc.Services.Count > 1 ? doc.Services.Last() : svc1;
-                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(9), EndAt = baseDate.AddHours(10), DoctorId = doc.DoctorId, PatientId = patients[5].PatientId, ServiceId = svc1.ServiceId });
-                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(11), EndAt = baseDate.AddHours(12.5), DoctorId = doc.DoctorId, PatientId = patients[6].PatientId, ServiceId = svc2.ServiceId });
+                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(9), EndAt = baseDate.AddHours(10).AddMinutes(svc1.DurationMinutes), DoctorId = doc.DoctorId, PatientId = patients[5].PatientId, ServiceId = svc1.ServiceId });
+                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(11), EndAt = baseDate.AddHours(11).AddMinutes(svc2.DurationMinutes), DoctorId = doc.DoctorId, PatientId = patients[6].PatientId, ServiceId = svc2.ServiceId });
                 }
 
                 // Doctor 8 (Liudmyla - Neurologist)
@@ -348,8 +348,8 @@ namespace DAL.Data
                 {
                     var doc = doctors[7];
                     var svc = doc.Services.First();
-                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(13), EndAt = baseDate.AddHours(14), DoctorId = doc.DoctorId, PatientId = patients[0].PatientId, ServiceId = svc.ServiceId });
-                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(14.5), EndAt = baseDate.AddHours(16), DoctorId = doc.DoctorId, PatientId = patients[1].PatientId, ServiceId = svc.ServiceId });
+                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(13), EndAt = baseDate.AddHours(13).AddMinutes(svc.DurationMinutes), DoctorId = doc.DoctorId, PatientId = patients[0].PatientId, ServiceId = svc.ServiceId });
+                    context.Appointments.Add(new Appointment { StartAt = baseDate.AddHours(14.5), EndAt = baseDate.AddHours(14.5).AddMinutes(svc.DurationMinutes), DoctorId = doc.DoctorId, PatientId = patients[1].PatientId, ServiceId = svc.ServiceId });
                 }
 
                 await context.SaveChangesAsync();
