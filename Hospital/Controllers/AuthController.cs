@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using BLL.DTOs;
 using BLL.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace PL.Controllers
@@ -43,6 +45,15 @@ namespace PL.Controllers
         {
             Response.Cookies.Delete("token");
             return Ok();
+        }
+
+        [Authorize]
+        [HttpGet("role")]
+        public IActionResult GetRole()
+        {
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            return Ok(role);
         }
 
         private void SetTokenCookie(string token, DateTime expiration)

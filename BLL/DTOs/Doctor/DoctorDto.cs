@@ -1,4 +1,3 @@
-using BLL.DTOs.Appointment;
 using DAL.Enums;
 
 namespace BLL.DTOs;
