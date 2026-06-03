@@ -10,6 +10,7 @@ namespace DAL.Data
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Service> Services { get; set; }
+        public DbSet<Manager> Managers { get; set; }
         
         protected override void OnModelCreating(ModelBuilder builder)
         {

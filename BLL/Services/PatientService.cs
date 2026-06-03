@@ -39,6 +39,20 @@ public class PatientService(IRepository<Patient> repository, IMapper mapper): IP
         await repository.DeleteAsync(patient!);
     }
 
+    public async Task UpdateAsync(int patientId, UpdatePatientDto dto)
+    {
+        var patient = await repository.GetByIdAsync(patientId);
+        
+        if (patient == null)
+        {
+            throw new KeyNotFoundException("Patient not found");
+        }
+
+        mapper.Map(dto, patient);
+        
+        await repository.UpdateAsync(patient);
+    }
+
     private void ValidateCreate(CreatePatientDto dto)
     {
         if (dto.DateOfBirth > DateTime.UtcNow)

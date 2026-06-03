@@ -97,6 +97,41 @@ public class DoctorService(IRepository<Doctor> doctorRepository, IRepository<Ser
         await doctorRepository.DeleteAsync(doctor!);
     }
 
+    public async Task UpdateDoctorAsync(int doctorId, UpdateDoctorDto dto)
+    {
+        var doctor = await doctorRepository
+            .Query()
+            .Include(d => d.Appointments)
+            .Where(doctor => doctor.DoctorId == doctorId)
+            .FirstOrDefaultAsync();
+        
+        ValidateUpdateDoctor(doctor, dto);
+
+        mapper.Map(dto, doctor);
+        
+        await doctorRepository.UpdateAsync(doctor!);
+    }
+
+    private void ValidateUpdateDoctor(Doctor? doctor, UpdateDoctorDto dto)
+    {
+        if (doctor == null)
+        {
+            throw new KeyNotFoundException("Doctor not found");
+        }
+
+        if (dto.WorkEnd <= dto.WorkStart)
+        {
+            throw new ArgumentException("Work end must be after work start");
+        }
+
+        if (doctor.Appointments.Any(a => (TimeOnly.FromDateTime(a.StartAt) < dto.WorkStart
+                                         || TimeOnly.FromDateTime(a.EndAt) > dto.WorkEnd)
+                                         && a.EndAt > DateTime.UtcNow))
+        {
+            throw new InvalidOperationException("Doctor has appointments during this time");
+        }
+    }
+
     private void ValidateDeleteDoctor(Doctor? doctor)
     {
         if (doctor == null)

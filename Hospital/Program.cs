@@ -108,6 +108,7 @@ builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
 builder.Services.AddScoped<IServiceService, ServiceService>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IManagerService, ManagerService>();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 

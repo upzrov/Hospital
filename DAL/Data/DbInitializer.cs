@@ -207,6 +207,42 @@ namespace DAL.Data
                 context.Doctors.AddRange(doc1, doc2, doc3, doc4, doc5, doc6, doc7, doc8);
                 await context.SaveChangesAsync();
             }
+            
+            //Managers
+            if (!await context.Managers.AnyAsync())
+            {
+                var m1 = new Manager
+                {
+                    FullName = "Олександр Коваленко",
+                    Email = "o.kovalenko@hospital.com",
+                    PhoneNumber = "0671112233"
+                };
+                
+                var m2 = new Manager
+                {
+                    FullName = "Ірина Шевченко",
+                    Email = "i.shevchenko@hospital.com",
+                    PhoneNumber = "0501234567"
+                };
+                
+                var m3 = new Manager
+                {
+                    FullName = "Володимир Бондар",
+                    Email = "v.bondar@hospital.com",
+                    PhoneNumber = "0931234567"
+                };
+                
+                var u1 = await EnsureUser("manager1@hospital.com", "Manager123!", m1.FullName, "Manager");
+                var u2 = await EnsureUser("manager2@hospital.com", "Manager123!", m2.FullName, "Manager");
+                var u3 = await EnsureUser("manager3@hospital.com", "Manager123!", m3.FullName, "Manager");
+                
+                m1.UserId = u1.Id;
+                m2.UserId = u2.Id;
+                m3.UserId = u3.Id;
+                
+                context.Managers.AddRange(m1, m2, m3);
+                await context.SaveChangesAsync();
+            }
 
             // Users 
             async Task<User> EnsureUser(string email, string pwd, string fullName, string role)
@@ -241,31 +277,38 @@ namespace DAL.Data
 
             if (!await context.Patients.AnyAsync(p => p.UserId == p1.Id))
             {
-                context.Patients.Add(new Patient { UserId = p1.Id, FullName = p1.Name });
+                context.Patients.Add(new Patient { UserId = p1.Id, FullName = p1.Name, 
+                    PhoneNumber = "0501000001", DateOfBirth = DateTime.Parse("1990-01-01") });
             }
             if (!await context.Patients.AnyAsync(p => p.UserId == p2.Id))
             {
-                context.Patients.Add(new Patient { UserId = p2.Id, FullName = p2.Name });
+                context.Patients.Add(new Patient { UserId = p2.Id, FullName = p2.Name, 
+                    PhoneNumber = "0501000002", DateOfBirth = DateTime.Parse("1995-05-15")});
             }
             if (!await context.Patients.AnyAsync(p => p.UserId == p3.Id))
             {
-                context.Patients.Add(new Patient { UserId = p3.Id, FullName = p3.Name });
+                context.Patients.Add(new Patient { UserId = p3.Id, FullName = p3.Name, 
+                    PhoneNumber = "0501000003", DateOfBirth = DateTime.Parse("1985-02-28")});
             }
             if (!await context.Patients.AnyAsync(p => p.UserId == p4.Id))
             {
-                context.Patients.Add(new Patient { UserId = p4.Id, FullName = p4.Name });
+                context.Patients.Add(new Patient { UserId = p4.Id, FullName = p4.Name, 
+                    PhoneNumber = "0501000004", DateOfBirth = DateTime.Parse("1980-08-15")});
             }
             if (!await context.Patients.AnyAsync(p => p.UserId == p5.Id))
             {
-                context.Patients.Add(new Patient { UserId = p5.Id, FullName = p5.Name });
+                context.Patients.Add(new Patient { UserId = p5.Id, FullName = p5.Name, 
+                    PhoneNumber = "0501000005", DateOfBirth = DateTime.Parse("1978-03-10")});
             }
             if (!await context.Patients.AnyAsync(p => p.UserId == p6.Id))
             {
-                context.Patients.Add(new Patient { UserId = p6.Id, FullName = p6.Name });
+                context.Patients.Add(new Patient { UserId = p6.Id, FullName = p6.Name, 
+                    PhoneNumber = "0501000006", DateOfBirth = DateTime.Parse("1975-11-05")});
             }
             if (!await context.Patients.AnyAsync(p => p.UserId == p7.Id))
             {
-                context.Patients.Add(new Patient { UserId = p7.Id, FullName = p7.Name });
+                context.Patients.Add(new Patient { UserId = p7.Id, FullName = p7.Name, 
+                    PhoneNumber = "0501000007", DateOfBirth = DateTime.Parse("1970-07-12")});
             }
             await context.SaveChangesAsync();
 
