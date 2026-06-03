@@ -11,5 +11,7 @@ public class PatientProfile : Profile
         CreateMap<CreatePatientDto, Patient>();
 
         CreateMap<Patient, PatientDto>();
+        
+        CreateMap<UpdatePatientDto, Patient>();
     }
 }
