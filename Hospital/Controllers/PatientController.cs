@@ -9,8 +9,8 @@ namespace PL.Controllers
     public class PatientController(IPatientService patientService) : ControllerBase
     {
         [HttpGet]
-        [Authorize(Roles = "Administrator")]
-        public async Task<IActionResult> GetAllPateints()
+        [Authorize(Roles = "Administrator, Manager")]
+        public async Task<IActionResult> GetAllPatients()
         {
             return Ok(await patientService.GetAllAsync());
         }

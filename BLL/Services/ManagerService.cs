@@ -40,5 +40,12 @@ public class ManagerService(UserManager<User> userManager, RoleManager<IdentityR
         await managerRepository.CreateAsync(manager);
 
         return mapper.Map<ManagerDto>(manager);
-    } 
+    }
+
+    public async Task<IEnumerable<ManagerDto>> GetAllManagersAsync()
+    {
+        var managers = await managerRepository.GetAllAsync();
+
+        return managers.Select(m => mapper.Map<ManagerDto>(m));
+    }
 }

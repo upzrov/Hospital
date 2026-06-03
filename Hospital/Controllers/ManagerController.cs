@@ -16,5 +16,13 @@ namespace PL.Controllers
             var manager = await managerService.CreateManager(model);
             return Ok(manager);
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Administrator, Manager")]
+        public async Task<IActionResult> GetAllManagers()
+        {
+            var managers = await managerService.GetAllManagersAsync();
+            return Ok(managers);
+        }
     }
 }
