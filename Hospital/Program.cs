@@ -119,20 +119,20 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
+    app.UseMigrationsEndPoint();
+
     app.MapOpenApi();
     app.MapScalarApiReference();
-    app.UseHsts();
 }
 else
 {
-    app.UseDeveloperExceptionPage();
-    app.UseMigrationsEndPoint();
+    app.UseHsts();
 }
 
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-
     var context = services.GetRequiredService<HospitalContext>();
     context.Database.EnsureCreated();
     await DbInitializer.Initialize(services);
@@ -143,6 +143,7 @@ app.UseExceptionHandler();
 app.UseHttpsRedirection();
 
 app.UseCors("AllowFrontend");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
