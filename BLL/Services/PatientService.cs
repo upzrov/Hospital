@@ -1,13 +1,15 @@
 using AutoMapper;
 using BLL.DTOs;
+using BLL.Exceptions;
 using BLL.Interfaces;
 using DAL.Interfaces;
 using DAL.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services;
 
-public class PatientService(IRepository<Patient> repository, IMapper mapper): IPatientService
+public class PatientService(IRepository<Patient> repository, IMapper mapper, UserManager<User> userManager): IPatientService
 {
     public async Task<PatientDto> CreateAsync(CreatePatientDto dto) 
     {
@@ -32,9 +34,17 @@ public class PatientService(IRepository<Patient> repository, IMapper mapper): IP
         var patient = await repository
             .Query()
             .Include(p => p.Appointments)
+            .Include(p => p.User)
             .FirstOrDefaultAsync(p => p.PatientId == patientId);
         
         ValidateDelete(patient);
+
+        var result = await userManager.DeleteAsync(patient.User);
+
+        if (!result.Succeeded)
+        {
+            throw new IdentityValidationException(result.Errors);
+        }
 
         await repository.DeleteAsync(patient!);
     }

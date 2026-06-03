@@ -90,11 +90,19 @@ public class DoctorService(IRepository<Doctor> doctorRepository, IRepository<Ser
         var doctor = await doctorRepository
             .Query()
             .Include(d => d.Appointments)
+            .Include(d => d.User)
             .FirstOrDefaultAsync(d => d.DoctorId == doctorId);
         
         ValidateDeleteDoctor(doctor);
 
-        await doctorRepository.DeleteAsync(doctor!);
+        var result = await userManager.DeleteAsync(doctor!.User);
+
+        if (!result.Succeeded)
+        {
+            throw new IdentityValidationException(result.Errors);
+        }
+
+        await doctorRepository.DeleteAsync(doctor);
     }
 
     public async Task UpdateDoctorAsync(int doctorId, UpdateDoctorDto dto)
