@@ -366,3 +366,9 @@ FodyWeavers.xsd
 *.db
 *.db-shm
 *.db-wal
+
+# macOS
+.DS_Store
+
+# JetBrains IDE
+.idea/
