@@ -38,5 +38,13 @@ namespace PL.Controllers
             await doctorService.DeleteDoctorAsync(doctorId);
             return NoContent();
         }
+
+        [Authorize(Roles = "Administrator, Manager")]
+        [HttpPut("{doctorId}")]
+        public async Task<IActionResult> UpdateDoctor([FromRoute] int doctorId, [FromBody] UpdateDoctorDto moel)
+        {
+            await doctorService.UpdateDoctorAsync(doctorId, moel);
+            return NoContent();
+        }
     }
 }
