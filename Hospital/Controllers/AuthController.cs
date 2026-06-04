@@ -46,11 +46,15 @@ namespace PL.Controllers
             Response.Cookies.Delete("token");
             return Ok();
         }
-
-        [Authorize]
+        
         [HttpGet("role")]
         public IActionResult GetRole()
         {
+            if (User.Identity!.IsAuthenticated == false)
+            {
+                return Ok(null);
+            }
+            
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
 
             return Ok(role);

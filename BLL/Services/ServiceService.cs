@@ -1,5 +1,6 @@
 using AutoMapper;
 using BLL.DTOs;
+using BLL.DTOs.Service;
 using BLL.Interfaces;
 using DAL.Interfaces;
 using DAL.Models;
@@ -24,9 +25,11 @@ public class ServiceService(IRepository<Service> serviceRepository,
         return mapper.Map<ServiceDto>(service);
     }
 
-    public async Task<IEnumerable<ServiceDto>> GetAllServicesAsync()
+    public async Task<IEnumerable<ServiceDto>> GetAllServicesAsync(ServiceFilterDto filter)
     {
         var services = await serviceRepository.GetAllAsync();
+
+        services = ApplyFilter(services, filter);
 
         return services.Select(s => mapper.Map<ServiceDto>(s));
     }
@@ -38,6 +41,30 @@ public class ServiceService(IRepository<Service> serviceRepository,
         ValidateDeleteService(service);
 
         await serviceRepository.DeleteAsync(service!);
+    }
+
+    private IEnumerable<Service> ApplyFilter(IEnumerable<Service> services, ServiceFilterDto filter)
+    {
+        if (filter.Search != null)
+        { 
+            services = services.Where(s => s.Name.ToLower()
+                .Contains(filter.Search.Trim().ToLower())).ToList();
+        }
+
+        if (filter.Specialty != null)
+        {
+            services = services.Where(s => s.Specialty == filter.Specialty).ToList();
+        }
+        
+        services = filter.OrderBy switch
+
+        {
+            "price_desc" => services.OrderByDescending(s => s.Price),
+            "price_asc" => services.OrderBy(s => s.Price),
+            _ => services
+        };
+        
+        return services;
     }
 
     private void ValidateDeleteService(Service? service)

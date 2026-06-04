@@ -1,4 +1,5 @@
 using BLL.DTOs;
+using BLL.DTOs.Service;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,9 +19,9 @@ namespace PL.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllServices()
+        public async Task<IActionResult> GetAllServices([FromQuery] ServiceFilterDto filter)
         {
-            return Ok(await serviceService.GetAllServicesAsync());
+            return Ok(await serviceService.GetAllServicesAsync(filter));
         }
 
         [HttpDelete("{serviceId}")]
