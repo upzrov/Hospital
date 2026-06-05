@@ -120,6 +120,21 @@ public class DoctorService(IRepository<Doctor> doctorRepository, IRepository<Ser
         await doctorRepository.UpdateAsync(doctor!);
     }
 
+    public async Task<DoctorDetailsDto> GetDoctorByIdAsync(int doctorId)
+    {
+        var doctor = await doctorRepository
+            .Query()
+            .Include(d => d.Services)
+            .FirstOrDefaultAsync(d => d.DoctorId == doctorId);
+        
+        if (doctor == null)
+        {
+            throw new KeyNotFoundException("Doctor not found");
+        }
+        
+        return mapper.Map<DoctorDetailsDto>(doctor);
+    }
+
     private void ValidateUpdateDoctor(Doctor? doctor, UpdateDoctorDto dto)
     {
         if (doctor == null)
