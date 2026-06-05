@@ -137,7 +137,7 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
         DateTime startWork = date.Date + doctor.WorkStart.ToTimeSpan();
         DateTime endWork = date.Date + doctor.WorkEnd.ToTimeSpan();
         
-        var slots = GenerateSlots(service!, startWork, endWork);
+        var slots = GenerateSlots(service!, startWork, endWork, date);
         
         var doctorAppointments = await appointmentRepository
             .Query()
@@ -145,25 +145,26 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
             .ToListAsync();
 
         var availableSlots = slots
-            .Where(s => !doctorAppointments
-                .Any(a => a.StartAt < s.EndAt && a.EndAt > s.StartAt));
+            .Where(s => s.StartAt > DateTime.Now)
+            .Where(s => !doctorAppointments.Any(a => a.StartAt < s.EndAt && a.EndAt > s.StartAt))
+            .ToList();
 
         return availableSlots;
     }
 
     private IEnumerable<AvailableSlotDto> GenerateSlots(
-        Service service, DateTime startWork, DateTime endWork)
+        Service service, DateTime startWork, DateTime endWork, DateTime date)
     {
         var slots = new List<AvailableSlotDto>();
 
         for (DateTime i = startWork;
              i.AddMinutes(service.DurationMinutes) <= endWork;
-             i += TimeSpan.FromMinutes(15))
+             i += TimeSpan.FromMinutes(service.DurationMinutes))
         {
             slots.Add(new AvailableSlotDto
             {
-                StartAt = i,
-                EndAt = i.AddMinutes(service.DurationMinutes)
+                StartAt = date.Date + i.TimeOfDay,
+                EndAt = date.Date + i.AddMinutes(service.DurationMinutes).TimeOfDay
             });
         }
         
