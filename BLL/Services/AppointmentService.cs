@@ -20,6 +20,11 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
         var user = await userManager.Users
             .Include(u => u.PatientProfile)
             .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user == null)
+        {
+            throw new KeyNotFoundException("User not found");
+        }
         
         var service = await serviceRepository.GetByIdAsync(dto.ServiceId);
         
@@ -35,7 +40,7 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
             StartAt = dto.StartAt,
             EndAt = dto.StartAt.AddMinutes(service!.DurationMinutes),
             DoctorId = dto.DoctorId,
-            PatientId = user.PatientProfile.PatientId,
+            PatientId = user.PatientProfile!.PatientId,
             ServiceId = dto.ServiceId
         };
 
@@ -87,10 +92,9 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
 
     public async Task<IEnumerable<AppointmentDto>> GetAppointmentsByDoctorIdAsync(string? userId)
     {
-        var doctor = await appointmentRepository
+        var doctor = await doctorRepository
             .Query()
-            .Include(a => a.Doctor)
-            .FirstOrDefaultAsync(a => a.Doctor.UserId == userId);
+            .FirstOrDefaultAsync(a => a.UserId == userId);
 
         if (doctor == null)
         {

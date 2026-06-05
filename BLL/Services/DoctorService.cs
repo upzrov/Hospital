@@ -93,9 +93,22 @@ public class DoctorService(IRepository<Doctor> doctorRepository, IRepository<Ser
             .Include(d => d.User)
             .FirstOrDefaultAsync(d => d.DoctorId == doctorId);
         
-        ValidateDeleteDoctor(doctor);
+        if (doctor == null)
+        {
+            throw new KeyNotFoundException("Doctor not found");
+        }
 
-        var result = await userManager.DeleteAsync(doctor!.User);
+        if (doctor.Appointments.Any(a => a.EndAt > DateTime.UtcNow))
+        {
+            throw new InvalidOperationException("Doctor has appointments");
+        }
+
+        if (doctor.User == null)
+        {
+            throw new InvalidOperationException("User not found");
+        }
+
+        var result = await userManager.DeleteAsync(doctor.User);
 
         if (!result.Succeeded)
         {
@@ -154,20 +167,7 @@ public class DoctorService(IRepository<Doctor> doctorRepository, IRepository<Ser
             throw new InvalidOperationException("Doctor has appointments during this time");
         }
     }
-
-    private void ValidateDeleteDoctor(Doctor? doctor)
-    {
-        if (doctor == null)
-        {
-            throw new KeyNotFoundException("Doctor not found");
-        }
-
-        if (doctor.Appointments.Any(a => a.EndAt > DateTime.UtcNow))
-        {
-            throw new InvalidOperationException("Doctor has appointments");
-        }
-    }
-
+    
     private void ValidateAssignService(Doctor? doctor, Service? service)
     {
         if (doctor == null)

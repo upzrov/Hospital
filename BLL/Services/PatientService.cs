@@ -37,7 +37,20 @@ public class PatientService(IRepository<Patient> repository, IMapper mapper, Use
             .Include(p => p.User)
             .FirstOrDefaultAsync(p => p.PatientId == patientId);
         
-        ValidateDelete(patient);
+        if (patient == null)
+        {
+            throw new KeyNotFoundException("Patient not found");
+        }
+
+        if (patient.Appointments.Any(a => a.EndAt > DateTime.UtcNow))
+        {
+            throw new InvalidOperationException("Patient has appointments");
+        }
+
+        if (patient.User == null)
+        {
+            throw new InvalidOperationException("User not found");
+        }
 
         var result = await userManager.DeleteAsync(patient.User);
 
@@ -46,7 +59,7 @@ public class PatientService(IRepository<Patient> repository, IMapper mapper, Use
             throw new IdentityValidationException(result.Errors);
         }
 
-        await repository.DeleteAsync(patient!);
+        await repository.DeleteAsync(patient);
     }
 
     public async Task UpdateAsync(int patientId, UpdatePatientDto dto)
@@ -68,19 +81,6 @@ public class PatientService(IRepository<Patient> repository, IMapper mapper, Use
         if (dto.DateOfBirth > DateTime.UtcNow)
         {
             throw new ArgumentException("Date of birth cannot be in the future");
-        }
-    }
-    
-    private void ValidateDelete(Patient? patient)
-    {
-        if (patient == null)
-        {
-            throw new KeyNotFoundException("Patient not found");
-        }
-
-        if (patient.Appointments.Any(a => a.EndAt > DateTime.UtcNow))
-        {
-            throw new InvalidOperationException("Patient has appointments");
         }
     }
 }

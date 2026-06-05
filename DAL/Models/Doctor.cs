@@ -6,14 +6,14 @@ namespace DAL.Models
     {
         public int DoctorId { get; set; }
         public required string FullName { get; set; }
-        public required Specialty Specialty { get; set; }
+        public Specialty Specialty { get; set; }
         public required string Email { get; set; }
         public string? PhotoUrl { get; set; }
         public Gender Gender { get; set; }
         public TimeOnly WorkStart { get; set; }
         public TimeOnly WorkEnd { get; set; }
-        public string UserId { get; set; }
-        public User User { get; set; }
+        public string? UserId { get; set; }
+        public User? User { get; set; }
         public List<Appointment> Appointments { get; } = [];
         public ICollection<Service> Services { get; set; } = [];
     }
