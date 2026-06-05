@@ -2,7 +2,7 @@ using DAL.Enums;
 
 namespace BLL.DTOs;
 
-public class DoctorDto
+public class DoctorDetailsDto
 {
     public int DoctorId { get; set; }
     public required string FullName { get; set; }
@@ -12,4 +12,5 @@ public class DoctorDto
     public Gender Gender { get; set; }
     public TimeOnly WorkStart { get; set; }
     public TimeOnly WorkEnd { get; set; }
+    public IEnumerable<ServiceDto> Services { get; set; } = [];
 }

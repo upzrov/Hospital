@@ -22,6 +22,12 @@ namespace PL.Controllers
         {
             return Ok(await doctorService.GetAllAsync());
         }
+        
+        [HttpGet("{doctorId}")]
+        public async Task<IActionResult> GetDoctorById([FromRoute] int doctorId)
+        {
+            return Ok(await doctorService.GetDoctorByIdAsync(doctorId));
+        }
 
         [Authorize(Roles = "Administrator")]
         [HttpPut("{doctorId}/services/{serviceId}")]

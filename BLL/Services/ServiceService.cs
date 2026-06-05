@@ -4,6 +4,7 @@ using BLL.DTOs.Service;
 using BLL.Interfaces;
 using DAL.Interfaces;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services;
 
@@ -41,6 +42,21 @@ public class ServiceService(IRepository<Service> serviceRepository,
         ValidateDeleteService(service);
 
         await serviceRepository.DeleteAsync(service!);
+    }
+
+    public async Task<ServiceDetailsDto> GetServiceByIdAsync(int serviceId)
+    {
+        var service = await serviceRepository
+            .Query()
+            .Include(s => s.Doctors)
+            .FirstOrDefaultAsync(s => s.ServiceId == serviceId);
+        
+        if (service == null)
+        {
+            throw new KeyNotFoundException("Service not found");
+        }
+        
+        return mapper.Map<ServiceDetailsDto>(service);
     }
 
     private IEnumerable<Service> ApplyFilter(IEnumerable<Service> services, ServiceFilterDto filter)

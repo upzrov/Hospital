@@ -23,6 +23,12 @@ namespace PL.Controllers
         {
             return Ok(await serviceService.GetAllServicesAsync(filter));
         }
+        
+        [HttpGet("{serviceId}")]
+        public async Task<IActionResult> GetServiceById([FromRoute] int serviceId)
+        {
+            return Ok(await serviceService.GetServiceByIdAsync(serviceId));
+        }
 
         [HttpDelete("{serviceId}")]
         [Authorize(Roles = "Administrator")]
