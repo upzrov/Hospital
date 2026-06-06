@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using BLL.DTOs;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -30,6 +31,30 @@ namespace PL.Controllers
         {
             await patientService.UpdateAsync(patientId, model);
             return NoContent();
+        }
+
+        [HttpGet("me")]
+        [Authorize(Roles = "Patient")]
+        public async Task<IActionResult> GetPatientById()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var patient = await patientService.GetPatientByIdAsync(userId);
+            
+            return Ok(patient);
+        }
+
+        [HttpGet("{patientId}")]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> GetPatientById([FromRoute] int patientId)
+        {
+            var patient = await patientService.GetPatientByIdAsync(patientId);
+            return Ok(patient);
         }
     }
 }

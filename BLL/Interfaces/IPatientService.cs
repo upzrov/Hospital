@@ -8,4 +8,6 @@ public interface IPatientService
     Task<IEnumerable<PatientDto>> GetAllAsync();
     Task DeleteAsync(int patientId);
     Task UpdateAsync(int patientId, UpdatePatientDto dto);
+    Task<PatientDto> GetPatientByIdAsync(string userId);
+    Task<PatientDetailsDto> GetPatientByIdAsync(int patientId);
 }

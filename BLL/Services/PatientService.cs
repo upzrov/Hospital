@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services;
 
-public class PatientService(IRepository<Patient> repository, IMapper mapper, UserManager<User> userManager): IPatientService
+public class PatientService(IRepository<Patient> patientRepository, IMapper mapper, UserManager<User> userManager): IPatientService
 {
     public async Task<PatientDto> CreateAsync(CreatePatientDto dto) 
     {
@@ -17,21 +17,21 @@ public class PatientService(IRepository<Patient> repository, IMapper mapper, Use
         
         var patient = mapper.Map<Patient>(dto);
         
-        await repository.CreateAsync(patient);
+        await patientRepository.CreateAsync(patient);
 
         return mapper.Map<PatientDto>(patient);
     }
 
     public async Task<IEnumerable<PatientDto>> GetAllAsync()
     {
-        var patients = await repository.GetAllAsync();
+        var patients = await patientRepository.GetAllAsync();
 
         return patients.Select(p => mapper.Map<PatientDto>(p));
     }
 
     public async Task DeleteAsync(int patientId)
     {
-        var patient = await repository
+        var patient = await patientRepository
             .Query()
             .Include(p => p.Appointments)
             .Include(p => p.User)
@@ -59,12 +59,12 @@ public class PatientService(IRepository<Patient> repository, IMapper mapper, Use
             throw new IdentityValidationException(result.Errors);
         }
 
-        await repository.DeleteAsync(patient);
+        await patientRepository.DeleteAsync(patient);
     }
 
     public async Task UpdateAsync(int patientId, UpdatePatientDto dto)
     {
-        var patient = await repository.GetByIdAsync(patientId);
+        var patient = await patientRepository.GetByIdAsync(patientId);
         
         if (patient == null)
         {
@@ -73,7 +73,37 @@ public class PatientService(IRepository<Patient> repository, IMapper mapper, Use
 
         mapper.Map(dto, patient);
         
-        await repository.UpdateAsync(patient);
+        await patientRepository.UpdateAsync(patient);
+    }
+
+    public async Task<PatientDto> GetPatientByIdAsync(string userId)
+    {
+        var patient = await patientRepository
+            .Query()
+            .Where(p => p.UserId == userId)
+            .FirstOrDefaultAsync();
+        
+        if (patient == null)
+        {
+            throw new KeyNotFoundException("Patient not found");
+        }
+        
+        return mapper.Map<PatientDto>(patient);
+    }
+
+    public async Task<PatientDetailsDto> GetPatientByIdAsync(int patientId)
+    {
+        var patient = await patientRepository
+            .Query()
+            .Include(p => p.Appointments)
+            .FirstOrDefaultAsync(p => p.PatientId == patientId);
+        
+        if (patient == null)
+        {
+            throw new KeyNotFoundException("Patient not found");
+        }
+        
+        return mapper.Map<PatientDetailsDto>(patient);   
     }
 
     private void ValidateCreate(CreatePatientDto dto)
