@@ -21,14 +21,14 @@ namespace PL.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator, Manager")]
         public async Task<IActionResult> GetAppointments()
         {
             return Ok(await appointmentService.GetAllAppointmentsAsync());
         }
 
         [HttpDelete("{appointmentId}")]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Patient, Manager")]
         public async Task<IActionResult> DeleteAppointment([FromRoute] int appointmentId)
         {
             await appointmentService.DeleteAppointmentAsync(appointmentId);
