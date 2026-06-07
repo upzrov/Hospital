@@ -11,7 +11,7 @@ namespace PL.Controllers
     public class DoctorController(IDoctorService doctorService) : ControllerBase
     {
         [HttpPost]
-        [Authorize(Roles="Administrator")]
+        [Authorize(Roles="Manager")]
         public async Task<IActionResult> CreateDoctor([FromBody] CreateDoctorDto model)
         {
             var doctor = await doctorService.CreateAsync(model);
@@ -30,7 +30,7 @@ namespace PL.Controllers
             return Ok(await doctorService.GetDoctorByIdAsync(doctorId));
         }
 
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Manager")]
         [HttpPut("{doctorId}/services/{serviceId}")]
         public async Task<IActionResult> AssignServiceToDoctor(int doctorId, int serviceId)
         {
@@ -38,7 +38,7 @@ namespace PL.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Manager")]
         [HttpDelete("{doctorId}")]
         public async Task<IActionResult> DeleteDoctor([FromRoute] int doctorId)
         {
@@ -46,7 +46,7 @@ namespace PL.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "Administrator, Manager")]
+        [Authorize(Roles = "Manager")]
         [HttpPut("{doctorId}")]
         public async Task<IActionResult> UpdateDoctor([FromRoute] int doctorId, [FromBody] UpdateDoctorDto moel)
         {
