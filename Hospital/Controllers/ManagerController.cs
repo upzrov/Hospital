@@ -24,5 +24,13 @@ namespace PL.Controllers
             var managers = await managerService.GetAllManagersAsync();
             return Ok(managers);
         }
+        
+        [HttpPut("{managerId}")]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> UpdateManager([FromRoute] int managerId, [FromBody] UpdateManagerDto model)
+        {
+            await managerService.UpdateManagerAsync(managerId, model);
+            return NoContent();
+        }
     }
 }

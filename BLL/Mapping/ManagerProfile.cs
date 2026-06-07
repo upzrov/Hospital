@@ -10,5 +10,6 @@ public class ManagerProfile : Profile
     {
         CreateMap<Manager, ManagerDto>();
         CreateMap<CreateManagerDto, Manager>();
+        CreateMap<UpdateManagerDto, Manager>();
     }
 }

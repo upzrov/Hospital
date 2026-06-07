@@ -48,4 +48,17 @@ public class ManagerService(UserManager<User> userManager, RoleManager<IdentityR
 
         return managers.Select(m => mapper.Map<ManagerDto>(m));
     }
+
+    public async Task UpdateManagerAsync(int managerId, UpdateManagerDto dto)
+    {
+        var manager = await managerRepository.GetByIdAsync(managerId);
+
+        if (manager == null)
+        {
+            throw new KeyNotFoundException("Manager not found");
+        }
+        
+        mapper.Map(dto, manager);
+        await managerRepository.UpdateAsync(manager);
+    }
 }
