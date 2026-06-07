@@ -61,4 +61,16 @@ public class ManagerService(UserManager<User> userManager, RoleManager<IdentityR
         mapper.Map(dto, manager);
         await managerRepository.UpdateAsync(manager);
     }
+
+    public async Task DeleteManagerAsync(int managerId)
+    {
+        var manager = await managerRepository.GetByIdAsync(managerId);
+        
+        if (manager == null)
+        {
+            throw new KeyNotFoundException("Manager not found");
+        }
+        
+        await managerRepository.DeleteAsync(manager);
+    }
 }

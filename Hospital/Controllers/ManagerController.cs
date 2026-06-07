@@ -32,5 +32,13 @@ namespace PL.Controllers
             await managerService.UpdateManagerAsync(managerId, model);
             return NoContent();
         }
+
+        [HttpDelete("{managerId}")]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> DeleteManager([FromRoute] int managerId)
+        {
+            await managerService.DeleteManagerAsync(managerId);
+            return NoContent();
+        }
     }
 }
