@@ -46,7 +46,8 @@ namespace BLL.Services
 
             var patient = await patientService.CreateAsync(new CreatePatientDto
             {
-                FullName = model.FullName,
+                Name = model.Name,
+                LastName = model.LastName,
                 DateOfBirth = model.DateOfBirth,
                 PhoneNumber = model.PhoneNumber,
                 UserId = user.Id

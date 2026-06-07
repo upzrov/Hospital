@@ -14,10 +14,10 @@ namespace BLL.DTOs
         [MaxLength(20, ErrorMessage = "Name must be at most 20 characters long")]
         public required string Name { get; set; }
         
-        [Required(ErrorMessage = "Full name is required")]
-        [MinLength(3, ErrorMessage = "Full name must be at least 3 characters long")]
-        [MaxLength(40, ErrorMessage = "Full name must be at most 20 characters long")]
-        public required string FullName { get; set; }
+        [Required(ErrorMessage = "Last name is required")]
+        [MinLength(3, ErrorMessage = "Last name must be at least 3 characters long")]
+        [MaxLength(40, ErrorMessage = "Last name must be at most 20 characters long")]
+        public required string LastName { get; set; }
         
         [Required(ErrorMessage = "Phone number is required")]
         [RegularExpression(@"^\+?\d{10,15}$", ErrorMessage = "Invalid phone number")]

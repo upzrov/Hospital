@@ -8,7 +8,10 @@ public class PatientProfile : Profile
 {
     public PatientProfile()
     {
-        CreateMap<CreatePatientDto, Patient>();
+        CreateMap<CreatePatientDto, Patient>()
+            .ForMember(dest => dest.FullName,
+                opt => opt
+                    .MapFrom(src => $"{src.Name} {src.LastName}"));
 
         CreateMap<Patient, PatientDto>();
         

@@ -4,10 +4,11 @@ namespace BLL.DTOs;
 
 public class CreatePatientDto
 {
+    public required string Name { get; set; }
     [Required(ErrorMessage = "Full name is required")]
     [MinLength(3, ErrorMessage = "Full name must be at least 3 characters long")]
     [MaxLength(40, ErrorMessage = "Full name must be at most 20 characters long")]
-    public required string FullName { get; set; }
+    public required string LastName { get; set; }
     
     public DateTime DateOfBirth { get; set; }
     
