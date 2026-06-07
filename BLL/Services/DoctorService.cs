@@ -148,6 +148,21 @@ public class DoctorService(IRepository<Doctor> doctorRepository, IRepository<Ser
         return mapper.Map<DoctorDetailsDto>(doctor);
     }
 
+    public async Task<DoctorDetailsDto> GetDoctorByUserIdAsync(string userId)
+    {
+        var doctor = await doctorRepository
+            .Query()
+            .Include(d => d.Services)
+            .FirstOrDefaultAsync(d => d.UserId == userId);
+
+        if (doctor == null)
+        {
+            throw new KeyNotFoundException("Doctor not found");
+        }
+        
+        return mapper.Map<DoctorDetailsDto>(doctor);
+    }
+
     private void ValidateUpdateDoctor(Doctor? doctor, UpdateDoctorDto dto)
     {
         if (doctor == null)

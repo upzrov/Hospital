@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using BLL.DTOs;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -51,6 +52,21 @@ namespace PL.Controllers
         {
             await doctorService.UpdateDoctorAsync(doctorId, moel);
             return NoContent();
+        }
+
+        [Authorize(Roles = "Doctor")]
+        [HttpGet("me")]
+        public async Task<IActionResult> GetDoctorById()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var doctor = await doctorService.GetDoctorByUserIdAsync(userId);
+            return Ok(doctor);
         }
     }
 }
