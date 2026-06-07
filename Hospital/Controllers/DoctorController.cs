@@ -68,5 +68,13 @@ namespace PL.Controllers
             var doctor = await doctorService.GetDoctorByUserIdAsync(userId);
             return Ok(doctor);
         }
+        
+        [Authorize(Roles = "Manager")]
+        [HttpDelete("{doctorId}/services/{serviceId}")]
+        public async Task<IActionResult> DeleteServiceFromDoctor(int doctorId, int serviceId)
+        {
+            await doctorService.DeleteServiceFromDoctorAsync(doctorId, serviceId);
+            return NoContent();
+        }
     }
 }

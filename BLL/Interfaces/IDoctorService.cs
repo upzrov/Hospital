@@ -11,4 +11,5 @@ public interface IDoctorService
     Task UpdateDoctorAsync(int doctorId, UpdateDoctorDto dto);
     Task<DoctorDetailsDto> GetDoctorByIdAsync(int doctorId);
     Task<DoctorDetailsDto> GetDoctorByUserIdAsync(string userId);
+    Task DeleteServiceFromDoctorAsync(int doctorId, int serviceId);
 }

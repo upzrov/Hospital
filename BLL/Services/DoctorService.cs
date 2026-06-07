@@ -163,6 +163,39 @@ public class DoctorService(IRepository<Doctor> doctorRepository, IRepository<Ser
         return mapper.Map<DoctorDetailsDto>(doctor);
     }
 
+    public async Task DeleteServiceFromDoctorAsync(int doctorId, int serviceId)
+    {
+        var doctor = await doctorRepository.Query()
+            .Include(d => d.Services)
+            .Include(d => d.Appointments)
+            .FirstOrDefaultAsync(d => d.DoctorId == doctorId);
+        
+        var service = await serviceRepository.GetByIdAsync(serviceId);
+        
+        if (doctor == null)
+        {
+            throw new KeyNotFoundException("Doctor not found");
+        }
+
+        if (service == null)
+        {
+            throw new KeyNotFoundException("Service not found");
+        }
+
+        if (!doctor.Services.Any(d => d.ServiceId == serviceId))
+        {
+            throw new KeyNotFoundException("Doctor does not have this service");
+        }
+        
+        if (doctor.Appointments.Any(a => a.ServiceId == serviceId && a.EndAt > DateTime.UtcNow))
+        {
+            throw new InvalidOperationException("Doctor has appointments with this service");
+        }
+        
+        doctor.Services.Remove(service);
+        await doctorRepository.UpdateAsync(doctor);
+    }
+
     private void ValidateUpdateDoctor(Doctor? doctor, UpdateDoctorDto dto)
     {
         if (doctor == null)
