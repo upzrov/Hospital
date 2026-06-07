@@ -77,6 +77,8 @@ public class ServiceService(IRepository<Service> serviceRepository,
         {
             "price_desc" => services.OrderByDescending(s => s.Price),
             "price_asc" => services.OrderBy(s => s.Price),
+            "name_desc" => services.OrderByDescending(s => s.Name),
+            "name_asc" => services.OrderBy(s => s.Name),
             _ => services
         };
         
