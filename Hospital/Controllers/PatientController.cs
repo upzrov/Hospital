@@ -18,7 +18,7 @@ namespace PL.Controllers
         }
         
         [HttpDelete("{patientId}")]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator, Manager")]
         public async Task<IActionResult> DeletePatient([FromRoute] int patientId)
         {
             await patientService.DeleteAsync(patientId);
@@ -50,7 +50,7 @@ namespace PL.Controllers
         }
 
         [HttpGet("{patientId}")]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator, Manager")]
         public async Task<IActionResult> GetPatientById([FromRoute] int patientId)
         {
             var patient = await patientService.GetPatientByIdAsync(patientId);
