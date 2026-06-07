@@ -11,7 +11,7 @@ namespace PL.Controllers
     public class ServiceController(IServiceService serviceService) : ControllerBase
     {
         [HttpPost]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> CreateService([FromBody] CreateServiceDto model)
         {
             var service = await serviceService.CreateServiceAsync(model);
@@ -31,7 +31,7 @@ namespace PL.Controllers
         }
 
         [HttpDelete("{serviceId}")]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteService([FromRoute] int serviceId)
         {
             await serviceService.DeleteServiceAsync(serviceId);
