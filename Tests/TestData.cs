@@ -63,8 +63,8 @@ public static class TestData
             AppointmentId = appointmentId,
             DoctorId = 1,
             ServiceId = 1,
-            StartAt = new DateTime(2026, 06, 11, 10, 0, 0),
-            EndAt = new DateTime(2026, 06, 11, 11, 0, 0)
+            StartAt = new DateTime(2030, 06, 11, 10, 0, 0),
+            EndAt = new DateTime(2030, 06, 11, 11, 0, 0)
         };
     }
 }

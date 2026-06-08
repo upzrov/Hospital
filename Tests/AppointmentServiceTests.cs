@@ -54,7 +54,7 @@ public class AppointmentServiceTests
         {
             DoctorId = 1,
             ServiceId = 1,
-            StartAt = DateTime.UtcNow.AddDays(1)
+            StartAt = new DateTime(2030, 06, 11, 10,0,0)
         };
 
         var emptyUsersMockQuery = new List<User>().BuildMock();
@@ -74,7 +74,7 @@ public class AppointmentServiceTests
         {
             DoctorId = 1,
             ServiceId = 1,
-            StartAt = DateTime.UtcNow.AddDays(1)
+            StartAt = new DateTime(2030, 06, 11, 10,0,0)
         };
 
         var user = TestData.CreateUser("1");
@@ -101,7 +101,7 @@ public class AppointmentServiceTests
         {
             DoctorId = 1,
             ServiceId = 1,
-            StartAt = DateTime.UtcNow.AddDays(1)
+            StartAt = new DateTime(2030, 06, 11, 10,0,0)
         };
 
         var user = TestData.CreateUser("1");
@@ -157,7 +157,7 @@ public class AppointmentServiceTests
         {
             DoctorId = 1,
             ServiceId = 1,
-            StartAt = new DateTime(2026, 06, 11, 10,0,0)
+            StartAt = new DateTime(2030, 06, 11, 10,0,0)
         };
 
         var user = TestData.CreateUser("1");
@@ -185,7 +185,7 @@ public class AppointmentServiceTests
         {
             DoctorId = 1,
             ServiceId = 1,
-            StartAt = new DateTime(2026, 06, 11, 17,0,0)
+            StartAt = new DateTime(2030, 06, 11, 17,0,0)
         };
 
         var user = TestData.CreateUser("1");
@@ -215,10 +215,12 @@ public class AppointmentServiceTests
         {
             DoctorId = 1,
             ServiceId = 1,
-            StartAt = new DateTime(2026, 06, 11, 10,0,0)
+            StartAt = new DateTime(2030, 06, 11, 10,0,0)
         };
 
         var appointment = TestData.CreateAppointment(1);
+        appointment.StartAt = new DateTime(2030, 06, 11, 10,0,0);
+        appointment.EndAt = new DateTime(2030, 06, 11, 11,0,0);
 
         var user = TestData.CreateUser("1");
         var service = TestData.CreateService(1);
@@ -250,7 +252,7 @@ public class AppointmentServiceTests
         {
             DoctorId = 1,
             ServiceId = 1,
-            StartAt = new DateTime(2026, 06, 13, 10,0,0)
+            StartAt = new DateTime(2030, 06, 15, 10,0,0)
         };
 
         var user = TestData.CreateUser("1");
@@ -279,7 +281,7 @@ public class AppointmentServiceTests
         {
             DoctorId = 1,
             ServiceId = 1,
-            StartAt = new DateTime(2026, 06, 11, 10,0,0)
+            StartAt = new DateTime(2030, 06, 11, 10,0,0)
         };
 
         var user = TestData.CreateUser("1");
@@ -519,7 +521,7 @@ public class AppointmentServiceTests
     [Fact]
     public async Task GetAvailableSlotsAsync_DoctorExists_ReturnsOnlyAvailableSlots()
     {
-        DateTime date = new DateTime(2026, 06, 11); 
+        DateTime date = new DateTime(2030, 06, 11); 
 
         var service = TestData.CreateService(1);
 
@@ -533,8 +535,8 @@ public class AppointmentServiceTests
             AppointmentId = 5,
             DoctorId = 1,
             ServiceId = 1,
-            StartAt = new DateTime(2026, 06, 11, 10, 0, 0),
-            EndAt = new DateTime(2026, 06, 11, 11, 0, 0)
+            StartAt = new DateTime(2030, 06, 11, 10,0,0),
+            EndAt = new DateTime(2030, 06, 11, 11,0,0)
         };
         doctor.Appointments.Add(existingAppointment);
 
@@ -552,9 +554,9 @@ public class AppointmentServiceTests
         Assert.Equal(2, result.Count);
 
         // Перший слот: 09:00 - 10:00
-        Assert.Equal(new DateTime(2026, 06, 11, 9, 0, 0), result[0].StartAt);
+        Assert.Equal(new DateTime(2030, 06, 11, 9,0,0), result[0].StartAt);
     
         // Другий слот: 11:00 - 12:00 
-        Assert.Equal(new DateTime(2026, 06, 11, 11, 0, 0), result[1].StartAt);
+        Assert.Equal(new DateTime(2030, 06, 11, 11,0,0), result[1].StartAt);
     }
 }
