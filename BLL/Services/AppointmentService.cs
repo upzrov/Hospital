@@ -112,15 +112,15 @@ public class AppointmentService(IRepository<Appointment> appointmentRepository,
 
     public async Task<IEnumerable<AvailableSlotDto>> GetAvailableSlotsAsync(int doctorId, int serviceId, DateTime date)
     {
-        var doctor = await doctorRepository
-            .Query()
-            .Include(d => d.Services)
-            .FirstOrDefaultAsync(d => d.DoctorId == doctorId);
-
         if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
         {
             return Enumerable.Empty<AvailableSlotDto>();
         }
+        
+        var doctor = await doctorRepository
+            .Query()
+            .Include(d => d.Services)
+            .FirstOrDefaultAsync(d => d.DoctorId == doctorId);
 
         if (doctor == null)
         {
